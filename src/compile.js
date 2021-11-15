@@ -5,6 +5,17 @@ import {
   Transformer as BasisTransformer,
   Compiler as BasisCompiler
 } from '@graffiticode/basis';
+import fs from 'fs';
+import postcss from 'postcss';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+
+// THIS IS A TEST.
+fs.readFile('src/style.css', (err, css) => {
+  postcss([tailwindcss, autoprefixer]).process(css, {from:undefined}).then(result => {
+    console.log("processcss().prcess() result.css=" + result.css);
+  });
+});
 
 export class Checker extends BasisChecker {
   HELLO(node, options, resume) {
@@ -265,3 +276,4 @@ export const compiler = new BasisCompiler({
   Checker: Checker,
   Transformer: Transformer,
 });
+
