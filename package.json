@@ -18,7 +18,6 @@
     "@pollyjs/core": "^5.1.0",
     "@pollyjs/persister-fs": "^5.0.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
-    "autoprefixer": "^10.4.0",
     "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
     "clean-webpack-plugin": "*",
@@ -41,6 +40,7 @@
   },
   "dependencies": {
     "@graffiticode/basis": "^1.0.11",
+    "autoprefixer": "^10.4.0",
     "d3": "^6.7.0",
     "express": "^4.17.1",
     "hashids": "^2.2.8",
