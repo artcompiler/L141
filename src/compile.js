@@ -190,7 +190,7 @@ export class Transformer extends BasisTransformer {
 
   PRIMARY(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      v0.attr = attrsFromVal('border-2 border-gray-400 bg-white text-base py-2 px-3 text-black', v0.attr);
+      v0.attr = attrsFromVal('bg-gray-600 text-base py-2 px-3 text-white', v0.attr);
       const err = [].concat(e0);
       const val = v0;
       resume(err, val);
@@ -199,7 +199,7 @@ export class Transformer extends BasisTransformer {
 
   OPTION_A(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      v0.attr = attrsFromVal('border border-gray-600 bg-white text-base py-2 px-3 text-gray-600', v0.attr);
+      v0.attr = attrsFromVal('bg-gray-200 text-base py-2 px-3 text-black', v0.attr);
       const err = [].concat(e0);
       const val = v0;
       resume(err, val);
@@ -208,7 +208,7 @@ export class Transformer extends BasisTransformer {
 
   OPTION_B(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      v0.attr = attrsFromVal('bg-gray-200 text-base py-2 px-3 text-black', v0.attr);
+      v0.attr = attrsFromVal('border border-gray-600 bg-white text-base py-2 px-3 text-black', v0.attr);
       const err = [].concat(e0);
       const val = v0;
       resume(err, val);
@@ -217,7 +217,7 @@ export class Transformer extends BasisTransformer {
 
   OPTION_C(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      v0.attr = attrsFromVal('bg-gray-600 text-base py-2 px-3 text-white', v0.attr);
+      v0.attr = attrsFromVal('border-2 border-gray-400 bg-white text-base py-2 px-3 text-black', v0.attr);
       const err = [].concat(e0);
       const val = v0;
       resume(err, val);
