@@ -104,6 +104,20 @@ export class Checker extends BasisChecker {
       resume(err,val);
     });
   }
+  V_GRADIENT(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  RAISED_BOTTOM(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
   DIV(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
@@ -278,9 +292,36 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  GRADIENT(node, options, resume) {
+  H_GRADIENT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0.attr = attrsFromVal('bg-gradient-to-r from-white', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  V_GRADIENT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('bg-gradient-to-t from-white', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  RAISED_BOTTOM(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('border-b-4', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  RAISED_TOP(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('border-t-4', v0.attr);
       const err = [];
       const val = v0;
       resume(err, val);
