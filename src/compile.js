@@ -34,13 +34,112 @@ export class Checker extends BasisChecker {
       resume(err, val);
     });
   }
-  SMALL_ROUNDED(node, options, resume) {
+  OPTION_A(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
       const val = node;
       resume(err, val);
     });
   }
+  OPTION_B(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
+  OPTION_C(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
+  ROUNDED_SM(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
+  ROUNDED_MD(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
+  ROUNDED_LG(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
+  ROUNDED_FULL(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
+  UPPERCASE(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  LOWERCASE(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  CAPITALIZE(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  NORMAL_CASE(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  SHADOW(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  H_GRADIENT(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  V_GRADIENT(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  RAISED_BOTTOM(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+>>>>>>> main
   DIV(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
@@ -134,12 +233,148 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  SMALL_ROUNDED(node, options, resume) {
+  OPTION_A(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('bg-gray-200 text-base py-2 px-3 text-black', v0.attr);
+      const err = [].concat(e0);
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  OPTION_B(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('border border-gray-600 bg-white text-base py-2 px-3 text-black', v0.attr);
+      const err = [].concat(e0);
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  OPTION_C(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('border-2 border-gray-400 bg-white text-base py-2 px-3 text-black', v0.attr);
+      const err = [].concat(e0);
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  ROUNDED_SM(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0.attr = attrsFromVal('rounded-sm', v0.attr);
       const err = [];
       const val = v0;
       resume(err, val);
+    });
+  }
+
+  ROUNDED_MD(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('rounded-md', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  ROUNDED_LG(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('rounded-lg', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  ROUNDED_FULL(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('rounded-full', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  UPPERCASE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('uppercase', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  LOWERCASE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('lowercase', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  CAPITALIZE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('capitalize', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  NORMAL_CASE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('normal-case', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  SHADOW(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('shadow-lg', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  H_GRADIENT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('bg-gradient-to-r from-white', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  V_GRADIENT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('bg-gradient-to-t from-white', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  RAISED_BOTTOM(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('border-b-4', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  RAISED_TOP(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('border-t-4', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+>>>>>>> main
     });
   }
 
