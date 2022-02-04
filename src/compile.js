@@ -55,28 +55,28 @@ export class Checker extends BasisChecker {
       resume(err, val);
     });
   }
-  SMALL_ROUNDED(node, options, resume) {
+  ROUNDED_SM(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
       const val = node;
       resume(err, val);
     });
   }
-  MEDIUM_ROUNDED(node, options, resume) {
+  ROUNDED_MD(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
       const val = node;
       resume(err, val);
     });
   }
-  LARGE_ROUNDED(node, options, resume) {
+  ROUNDED_LG(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
       const val = node;
       resume(err, val);
     });
   }
-  FULL_ROUNDED(node, options, resume) {
+  ROUNDED_FULL(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
       const val = node;
@@ -90,6 +90,27 @@ export class Checker extends BasisChecker {
       resume(err,val);
     });
   }
+  LOWERCASE(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  CAPITALIZE(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
+  NORMAL_CASE(node, options, resume){
+    this.visit(node.elts[0], options, async(e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err,val);
+    });
+  }
   SHADOW(node, options, resume){
     this.visit(node.elts[0], options, async(e0, v0) => {
       const err = [];
@@ -97,7 +118,7 @@ export class Checker extends BasisChecker {
       resume(err,val);
     });
   }
-  GRADIENT(node, options, resume){
+  H_GRADIENT(node, options, resume){
     this.visit(node.elts[0], options, async(e0, v0) => {
       const err = [];
       const val = node;
@@ -238,7 +259,7 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  SMALL_ROUNDED(node, options, resume) {
+  ROUNDED_SM(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0.attr = attrsFromVal('rounded-sm', v0.attr);
       const err = [];
@@ -247,7 +268,7 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  MEDIUM_ROUNDED(node, options, resume) {
+  ROUNDED_MD(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0.attr = attrsFromVal('rounded-md', v0.attr);
       const err = [];
@@ -256,7 +277,7 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  LARGE_ROUNDED(node, options, resume) {
+  ROUNDED_LG(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0.attr = attrsFromVal('rounded-lg', v0.attr);
       const err = [];
@@ -265,7 +286,7 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  FULL_ROUNDED(node, options, resume) {
+  ROUNDED_FULL(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0.attr = attrsFromVal('rounded-full', v0.attr);
       const err = [];
@@ -277,6 +298,33 @@ export class Transformer extends BasisTransformer {
   UPPERCASE(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0.attr = attrsFromVal('uppercase', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  LOWERCASE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('lowercase', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  CAPITALIZE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('capitalize', v0.attr);
+      const err = [];
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  NORMAL_CASE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0.attr = attrsFromVal('normal-case', v0.attr);
       const err = [];
       const val = v0;
       resume(err, val);
