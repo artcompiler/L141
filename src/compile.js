@@ -20,6 +20,15 @@ export class Checker extends BasisChecker {
       resume(err, val);
     });
   }
+  BORDER(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+      });
+    });
+  }
   BUTTON(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
@@ -139,7 +148,6 @@ export class Checker extends BasisChecker {
       resume(err,val);
     });
   }
->>>>>>> main
   DIV(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
@@ -176,6 +184,10 @@ function attrFromVal(val) {
 function attrsFromVal(val, attrs = {}) {
   if (typeof val === 'string') {
     attrs.className = val + ' ' + (attrs.className || '');
+  } else if (val instanceof Array) {
+    val.forEach((v) => {
+      attrs = attrsFromVal(v, attrs);
+    });
   } else {
     Object.keys(val).forEach(key => {
       if (key === 'class') {
@@ -213,12 +225,25 @@ export class Transformer extends BasisTransformer {
     });
   }
 
+  BORDER(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        v1.attr = attrsFromVal(v0, v1.attr);
+        const err = [].concat(e0).concat(e1);
+        const val = v1;
+        console.log("BORDER() val=" + JSON.stringify(val, null, 2));
+        resume(err, val);
+      });
+    });
+  }
+
   BUTTON(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [].concat(e0);
       const val = {
         type: "button",
         elts: v0,
+        attr: attrsFromVal('text-base py-2 px-3'),
       };
       resume(err, val);
     });
@@ -262,7 +287,6 @@ export class Transformer extends BasisTransformer {
 
   ROUNDED_SM(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      v0.attr = attrsFromVal('rounded-sm', v0.attr);
       const err = [];
       const val = v0;
       resume(err, val);
@@ -374,7 +398,6 @@ export class Transformer extends BasisTransformer {
       const err = [];
       const val = v0;
       resume(err, val);
->>>>>>> main
     });
   }
 
