@@ -227,8 +227,19 @@ export class Transformer extends BasisTransformer {
 
   BORDER(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      console.log("BORDER() v0=" + JSON.stringify(v0, null, 2));
       this.visit(node.elts[1], options, async (e1, v1) => {
-        v1.attr = attrsFromVal(v0, v1.attr);
+        console.log("BORDER() v1=" + JSON.stringify(v1, null, 2));
+        const attrs = [];
+        v0.forEach((v) => {
+          if (Number.isInteger(v)) {
+            attrs.push(`border-${v}`);
+          } else {
+            attrs.push(v);
+          }
+        });
+        v1.attr = attrsFromVal(attrs, v1.attr);
         const err = [].concat(e0).concat(e1);
         const val = v1;
         console.log("BORDER() val=" + JSON.stringify(val, null, 2));
@@ -243,7 +254,7 @@ export class Transformer extends BasisTransformer {
       const val = {
         type: "button",
         elts: v0,
-        attr: attrsFromVal('text-base py-2 px-3'),
+        attr: attrsFromVal('text-base py-2 px-3 border-black'),
       };
       resume(err, val);
     });
