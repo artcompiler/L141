@@ -235,22 +235,49 @@ export class Transformer extends BasisTransformer {
         v0.forEach((v) => {
           if (Number.isInteger(v)) {
             attrs.push(`border-${v}`);
-          } else {
-            attrs.push(v);
-          }
-          if (v == "red") {
+          } else if (v == "slate") {
             attrs.push(`border-${v}-600`);
-          } else if (Number.isInteger(v) >= 100) {
-            attrs.push(`border-red-${v}`)
-          } else {
-            attrs.push(v);
-          }
-          if (v == "sky") {
+          } else if (v == "gray") {
             attrs.push(`border-${v}-600`);
-          } else {
-            attrs.push(v);
-          }
-          if (v == "green") {
+          } else if (v == "zinc") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "neutral") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "stone") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "red") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "orange") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "amber") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "yello") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "lime") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "green") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "emerald") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "teal") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "cyan") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "sky") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "blue") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "indigo") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "violet") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "purple") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "fuchsia") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "pink") {
+            attrs.push(`border-${v}-600`);
+          } else if (v == "rose") {
             attrs.push(`border-${v}-600`);
           } else {
             attrs.push(v);
