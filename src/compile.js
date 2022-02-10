@@ -238,6 +238,23 @@ export class Transformer extends BasisTransformer {
           } else {
             attrs.push(v);
           }
+          if (v == "red") {
+            attrs.push(`border-${v}-600`);
+          } else if (Number.isInteger(v) >= 100) {
+            attrs.push(`border-red-${v}`)
+          } else {
+            attrs.push(v);
+          }
+          if (v == "sky") {
+            attrs.push(`border-${v}-600`);
+          } else {
+            attrs.push(v);
+          }
+          if (v == "green") {
+            attrs.push(`border-${v}-600`);
+          } else {
+            attrs.push(v);
+          }
         });
         v1.attr = attrsFromVal(attrs, v1.attr);
         const err = [].concat(e0).concat(e1);

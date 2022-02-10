@@ -95,7 +95,7 @@ export class Viewer extends React.Component {
   render() {
     const props = this.props;
     const obj = props.obj || {};
-    const data = obj.data && [].concat(obj.data) || [];
+    const data = obj.status && [].concat(obj.data.data) || obj.data && [].concat(obj.data) || [];
     const style = obj.style || "";
     setStyle(style);
     const elts = renderElts(data);
