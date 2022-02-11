@@ -205,7 +205,30 @@ function attrsFromVal(val, attrs = {}) {
   return attrs;
 }
 
-const colors = ['slate', 'gray', 'zinc', 'neutral', 'stone', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
+const colors = [
+  'slate',
+  'gray',
+  'zinc',
+  'neutral',
+  'stone',
+  'red',
+  'orange',
+  'amber',
+  'yellow',
+  'lime',
+  'green',
+  'emerald',
+  'teal',
+  'cyan',
+  'sky',
+  'blue',
+  'indigo',
+  'violet',
+  'purple',
+  'fuchsia',
+  'pink',
+  'rose'
+];
 
 export class Transformer extends BasisTransformer {
   HELLO(node, options, resume) {
@@ -230,9 +253,9 @@ export class Transformer extends BasisTransformer {
   BORDER(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0 = [].concat(v0);  // Make sure v0 is an array.
-      console.log("BORDER() v0=" + JSON.stringify(v0, null, 2));
+      // console.log("BORDER() v0=" + JSON.stringify(v0, null, 2));
       this.visit(node.elts[1], options, async (e1, v1) => {
-        console.log("BORDER() v1=" + JSON.stringify(v1, null, 2));
+        // console.log("BORDER() v1=" + JSON.stringify(v1, null, 2));
         const attrs = [];
         v0.forEach((v) => {
           if (Number.isInteger(v)) {
@@ -258,7 +281,7 @@ export class Transformer extends BasisTransformer {
       const val = {
         type: "button",
         elts: v0,
-        attr: attrsFromVal('text-base py-2 px-3 border-black'),
+        attr: attrsFromVal('text-base py-2 px-3'),
       };
       resume(err, val);
     });
@@ -625,6 +648,8 @@ export class Transformer extends BasisTransformer {
   }
 }
 
+const DEBUGGING = true;
+
 export class Renderer extends BasisRenderer {
   constructor(data) {
     super();
@@ -636,7 +661,13 @@ export class Renderer extends BasisRenderer {
     fs.readFile('src/style.css', (err, css) => {
       postcss([tailwindcss, autoprefixer]).process(css, {from:undefined}).then(result => {
         let style = result.css;
-//        console.log("render style=" + style);
+        if (DEBUGGING) {
+          fs.writeFile(`l141-debug-${Date.now()}.css`, style, {encoding: 'utf8'}, (err) => {
+            if (err) {
+              console.log(err);
+            }
+          });
+        }
         const err = [];
         const val = {
           data: this.data,
