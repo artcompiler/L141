@@ -648,7 +648,7 @@ export class Transformer extends BasisTransformer {
   }
 }
 
-const DEBUGGING = true;
+const DEBUGGING = false;
 
 export class Renderer extends BasisRenderer {
   constructor(data) {
