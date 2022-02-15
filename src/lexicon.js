@@ -31,6 +31,10 @@ window.gcexports.globalLexicon = {
   "fuchsia" : { "tk": 1, "cls": "string", "val": "fuchsia-600", "length": 0, "arity": 0 },
   "pink" : { "tk": 1, "cls": "string", "val": "pink-600", "length": 0, "arity": 0 },
   "rose" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
+  "t" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
+  "l" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
+  "r" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
+  "b" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
 
   "hello" : { "tk": 1, "name": "HELLO", "cls": "function", "length": 1 , "arity": 1 },
   "val" : { "tk": 1, "name": "VAL", "cls": "function", "length": 2 , "arity": 2 },

@@ -230,6 +230,13 @@ const colors = [
   'rose'
 ];
 
+const styles = [
+  't',
+  'b',
+  'r',
+  'l'
+];
+
 export class Transformer extends BasisTransformer {
   HELLO(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
@@ -261,6 +268,8 @@ export class Transformer extends BasisTransformer {
           if (Number.isInteger(v)) {
             attrs.push(`border-${v}`);
           } else if (colors.includes(v.split('-')[0])){
+            attrs.push(`border-${v}`);
+          } else if (styles.includes(v.split('-')[0])){
             attrs.push(`border-${v}`);
           } else {
             attrs.push(v);
@@ -662,7 +671,7 @@ export class Renderer extends BasisRenderer {
       postcss([tailwindcss, autoprefixer]).process(css, {from:undefined}).then(result => {
         let style = result.css;
         if (DEBUGGING) {
-          fs.writeFile(`l141-debug-${Date.now()}.css`, style, {encoding: 'utf8'}, (err) => {
+          fs.writeFile(`l141-debug.css`, style, {encoding: 'utf8'}, (err) => {
             if (err) {
               console.log(err);
             }
