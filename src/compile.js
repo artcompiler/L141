@@ -36,6 +36,22 @@ export class Checker extends BasisChecker {
       resume(err, val);
     });
   }
+  TEXT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+      });
+    });
+  }
+  TEXTBOX(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
   PRIMARY(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
@@ -246,12 +262,13 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  INPUT(node, options, resume) {
+  TEXT_INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [].concat(e0);
       const val = {
         type: "input",
-        attr: attrFromVal(v0),
+        elts: v0,
+        attr: attrFromVal(`border-2 rounded-md`),
       };
       resume(err, val);
     });
@@ -588,12 +605,15 @@ export class Transformer extends BasisTransformer {
 
   H3(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      const err = [].concat(e0);
-      const val = {
-        type: "h3",
-        elts: v0,
-      };
-      resume(err, val);
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        const err = [].concat(e0).concat(e1);
+        const val = {
+          type: "h3",
+          attr: attrFromVal(v0),
+          elts: v1,
+        };
+        resume(err, val);
+      });
     });
   }
 

@@ -36,6 +36,12 @@ window.gcexports.globalLexicon = {
   "r" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
   "b" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
 
+  "text" : { "tk": 1, "name": "TEXT", "cls": "function", "length": 2 , "arity": 2 },
+  "text-base" : { "tk": 1, "cls": "string", "val": "text-base", "length": 0, "arity": 0 },
+  "text-lg" : { "tk": 1, "cls": "string", "val": "text-lg", "length": 0, "arity": 0 },
+  "text-xl" : { "tk": 1, "cls": "string", "val": "text-xl", "length": 0, "arity": 0 },
+  "text-2xl" : { "tk": 1, "cls": "string", "val": "text-2xl", "length": 0, "arity": 0 },
+
   "hello" : { "tk": 1, "name": "HELLO", "cls": "function", "length": 1 , "arity": 1 },
   "val" : { "tk": 1, "name": "VAL", "cls": "function", "length": 2 , "arity": 2 },
   "key" : { "tk": 1, "name": "KEY", "cls": "function", "length": 2 , "arity": 2 },
@@ -64,7 +70,7 @@ window.gcexports.globalLexicon = {
   "v-gradient" : { "tk": 1, "name": "V_GRADIENT", "cls": "function", "length": 1, "arity": 1 },
   "raised-bottom" : { "tk": 1, "name": "RAISED_BOTTOM", "cls": "function", "length": 1, "arity": 1 },
   "raised-top" : { "tk": 1, "name": "RAISED_TOP", "cls": "function", "length": 1, "arity": 1 },
-  "input" : { "tk": 1, "name": "INPUT", "cls": "function", "length": 1, "arity": 1 },
+  "text-input" : { "tk": 1, "name": "TEXT_INPUT", "cls": "function", "length": 1, "arity": 1 },
   "img" : { "tk": 1, "name": "IMG", "cls": "function", "length": 1, "arity": 1 },
   "svg" : { "tk": 1, "name": "SVG", "cls": "function", "length": 2, "arity": 2 },
   "path" : { "tk": 1, "name": "PATH", "cls": "function", "length": 2, "arity": 2 },
@@ -76,6 +82,7 @@ window.gcexports.globalLexicon = {
   "title" : { "tk": 1, "name": "TITLE", "cls": "function", "length": 2, "arity": 2 },
   "span" : { "tk": 1, "name": "SPAN", "cls": "function", "length": 2, "arity": 2 },
   "p" : { "tk": 1, "name": "P", "cls": "function", "length": 2, "arity": 2 },
-  "h3" : { "tk": 1, "name": "H3", "cls": "function", "length": 1, "arity": 1 },
+  "h3" : { "tk": 1, "name": "H3", "cls": "function", "length": 2, "arity": 2 },
   "div" : { "tk": 1, "name": "DIV", "cls": "function", "length": 2, "arity": 2 }
+
 }
