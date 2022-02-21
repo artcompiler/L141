@@ -45,7 +45,7 @@ export class Checker extends BasisChecker {
       });
     });
   }
-  TEXTBOX(node, options, resume) {
+  TEXT_INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
       const val = node;
@@ -253,6 +253,7 @@ const styles = [
   'l'
 ];
 
+
 export class Transformer extends BasisTransformer {
   HELLO(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
@@ -268,9 +269,32 @@ export class Transformer extends BasisTransformer {
       const val = {
         type: "input",
         elts: v0,
-        attr: attrFromVal(`border-2 rounded-md`),
+        attr: attrFromVal(`border`),
       };
       resume(err, val);
+    });
+  }
+  
+  TEXT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      // console.log("TEXT() v0=" + JSON.stringify(v0, null, 2));
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        // console.log("TEXT() v1=" + JSON.stringify(v1, null, 2));
+        const attrs = [];
+        v0.forEach((v) => {
+          if (v.includes(v.split('-')[0])){
+            attrs.push(`text-${v}`);
+          } else {
+            attrs.push(v);
+          }
+        });
+        v1.attr = attrsFromVal(attrs, v1.attr);
+        const err = [].concat(e0).concat(e1);
+        const val = v1;
+        console.log("TEXT() val=" + JSON.stringify(val, null, 2));
+        resume(err, val);
+      });
     });
   }
 
