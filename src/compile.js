@@ -265,11 +265,12 @@ export class Transformer extends BasisTransformer {
 
   TEXT_INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = v0 || {};
+      v0.type = 'text';
       const err = [].concat(e0);
       const val = {
         type: "input",
-        elts: v0,
-        attr: attrFromVal(`border`),
+        attr: attrFromVal(v0),
       };
       resume(err, val);
     });
