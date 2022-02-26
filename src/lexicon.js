@@ -37,10 +37,22 @@ window.gcexports.globalLexicon = {
   "b" : { "tk": 1, "cls": "string", "val": "rose-600", "length": 0, "arity": 0 },
 
   "text" : { "tk": 1, "name": "TEXT", "cls": "function", "length": 2 , "arity": 2 },
+  "text-xs" : { "tk": 1, "cls": "string", "val": "text-xs", "length": 0, "arity": 0 },
+  "text-sm" : { "tk": 1, "cls": "string", "val": "text-sm", "length": 0, "arity": 0 },
   "text-base" : { "tk": 1, "cls": "string", "val": "text-base", "length": 0, "arity": 0 },
+  "text-md" : { "tk": 1, "cls": "string", "val": "text-md", "length": 0, "arity": 0 },
   "text-lg" : { "tk": 1, "cls": "string", "val": "text-lg", "length": 0, "arity": 0 },
   "text-xl" : { "tk": 1, "cls": "string", "val": "text-xl", "length": 0, "arity": 0 },
   "text-2xl" : { "tk": 1, "cls": "string", "val": "text-2xl", "length": 0, "arity": 0 },
+  "text-3xl" : { "tk": 1, "cls": "string", "val": "text-3xl", "length": 0, "arity": 0 },
+  "text-4xl" : { "tk": 1, "cls": "string", "val": "text-4xl", "length": 0, "arity": 0 },
+  "text-5xl" : { "tk": 1, "cls": "string", "val": "text-5xl", "length": 0, "arity": 0 },
+  "text-6xl" : { "tk": 1, "cls": "string", "val": "text-6xl", "length": 0, "arity": 0 },
+  "text-7xl" : { "tk": 1, "cls": "string", "val": "text-7xl", "length": 0, "arity": 0 },
+  "text-8xl" : { "tk": 1, "cls": "string", "val": "text-8xl", "length": 0, "arity": 0 },
+  "text-9xl" : { "tk": 1, "cls": "string", "val": "text-9xl", "length": 0, "arity": 0 },
+
+  "font" : { "tk": 1, "name": "FONT", "cls": "function", "length": 2 , "arity": 2 },
 
   "hello" : { "tk": 1, "name": "HELLO", "cls": "function", "length": 1 , "arity": 1 },
   "val" : { "tk": 1, "name": "VAL", "cls": "function", "length": 2 , "arity": 2 },

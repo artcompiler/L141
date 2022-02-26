@@ -36,6 +36,15 @@ export class Checker extends BasisChecker {
       resume(err, val);
     });
   }
+  FONT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+      });
+    });
+  }
   TEXT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       this.visit(node.elts[1], options, async (e1, v1) => {
@@ -265,11 +274,12 @@ export class Transformer extends BasisTransformer {
 
   TEXT_INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = v0 || {};
+      v0.type = 'text';
       const err = [].concat(e0);
       const val = {
         type: "input",
-        elts: v0,
-        attr: attrFromVal(`border`),
+        attr: attrFromVal(v0),
       };
       resume(err, val);
     });
@@ -285,6 +295,8 @@ export class Transformer extends BasisTransformer {
         v0.forEach((v) => {
           if (v.includes(v.split('-')[0])){
             attrs.push(`text-${v}`);
+          } else if (colors.includes(v.split('-')[0])){
+            attrs.push(`text-${v}`);
           } else {
             attrs.push(v);
           }
@@ -293,6 +305,29 @@ export class Transformer extends BasisTransformer {
         const err = [].concat(e0).concat(e1);
         const val = v1;
         console.log("TEXT() val=" + JSON.stringify(val, null, 2));
+        resume(err, val);
+      });
+    });
+  }
+
+  FONT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      // console.log("FONT() v0=" + JSON.stringify(v0, null, 2));
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        // console.log("FONT() v1=" + JSON.stringify(v1, null, 2));
+        const attrs = [];
+        v0.forEach((v) => {
+          if (v.includes(v.split('-')[0])){
+            attrs.push(`font-${v}`);
+          } else {
+            attrs.push(v);
+          }
+        });
+        v1.attr = attrsFromVal(attrs, v1.attr);
+        const err = [].concat(e0).concat(e1);
+        const val = v1;
+        console.log("FONT() val=" + JSON.stringify(val, null, 2));
         resume(err, val);
       });
     });
