@@ -71,6 +71,8 @@ window.gcexports.globalLexicon = {
   "raised-bottom" : { "tk": 1, "name": "RAISED_BOTTOM", "cls": "function", "length": 1, "arity": 1 },
   "raised-top" : { "tk": 1, "name": "RAISED_TOP", "cls": "function", "length": 1, "arity": 1 },
   "text-input" : { "tk": 1, "name": "TEXT_INPUT", "cls": "function", "length": 1, "arity": 1 },
+  "label" : { "tk": 1, "name": "LABEL", "cls": "function", "length": 2, "arity": 2 },
+  "input" : { "tk": 1, "name": "INPUT", "cls": "function", "length": 1, "arity": 1 },
   "img" : { "tk": 1, "name": "IMG", "cls": "function", "length": 1, "arity": 1 },
   "svg" : { "tk": 1, "name": "SVG", "cls": "function", "length": 2, "arity": 2 },
   "path" : { "tk": 1, "name": "PATH", "cls": "function", "length": 2, "arity": 2 },
