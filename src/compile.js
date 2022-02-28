@@ -54,6 +54,22 @@ export class Checker extends BasisChecker {
       });
     });
   }
+  LABEL(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+      });
+    });
+  }
+  INPUT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
   TEXT_INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
@@ -272,6 +288,18 @@ export class Transformer extends BasisTransformer {
     });
   }
 
+  INPUT(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = v0 || {};
+      const err = [].concat(e0);
+      const val = {
+        type: "input",
+        attr: attrFromVal(v0),
+      };
+      resume(err, val);
+    });
+  }
+
   TEXT_INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0 = v0 || {};
@@ -285,12 +313,33 @@ export class Transformer extends BasisTransformer {
     });
   }
   
+  LABEL(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        const attrs = [];
+        // v0.forEach((v) => {
+        //   if (v.includes(v.split('-')[0])){
+        //     attrs.push(`text-${v}`);
+        //   } else {
+        //     attrs.push(v);
+        //   }
+        // });
+        const err = [].concat(e0).concat(e1);
+        const val = {
+          type: 'label',
+          attr: attrFromVal(v0),
+          elts: [].concat(v1),
+        };
+        resume(err, val);
+      });
+    });
+  }
+
   TEXT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0 = [].concat(v0);  // Make sure v0 is an array.
-      // console.log("TEXT() v0=" + JSON.stringify(v0, null, 2));
       this.visit(node.elts[1], options, async (e1, v1) => {
-        // console.log("TEXT() v1=" + JSON.stringify(v1, null, 2));
         const attrs = [];
         v0.forEach((v) => {
           if (v.includes(v.split('-')[0])){
@@ -304,7 +353,6 @@ export class Transformer extends BasisTransformer {
         v1.attr = attrsFromVal(attrs, v1.attr);
         const err = [].concat(e0).concat(e1);
         const val = v1;
-        console.log("TEXT() val=" + JSON.stringify(val, null, 2));
         resume(err, val);
       });
     });
@@ -336,9 +384,7 @@ export class Transformer extends BasisTransformer {
   BORDER(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0 = [].concat(v0);  // Make sure v0 is an array.
-      // console.log("BORDER() v0=" + JSON.stringify(v0, null, 2));
       this.visit(node.elts[1], options, async (e1, v1) => {
-        // console.log("BORDER() v1=" + JSON.stringify(v1, null, 2));
         const attrs = [];
         v0.forEach((v) => {
           if (Number.isInteger(v)) {
@@ -354,7 +400,6 @@ export class Transformer extends BasisTransformer {
         v1.attr = attrsFromVal(attrs, v1.attr);
         const err = [].concat(e0).concat(e1);
         const val = v1;
-        console.log("BORDER() val=" + JSON.stringify(val, null, 2));
         resume(err, val);
       });
     });

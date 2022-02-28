@@ -21,6 +21,9 @@ function renderElts(data) {
     case 'input':
       elts.push(<input key={key++} {...renderAttr(d.attr)} />);
       break;
+    case 'label':
+      elts.push(<label key={key++} {...renderAttr(d.attr)}>{renderElts(d.elts)}</label>);
+      break;
     case 'button':
       elts.push(<button key={key++} {...renderAttr(d.attr)}>{renderElts(d.elts)}</button>);
       break;
