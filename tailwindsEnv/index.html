@@ -4,20 +4,27 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>index</title>
+    <title>Quiz</title>
     <link rel="stylesheet" href="/css/tailwind.css" />
   </head>
   <body>
     <div class="max-w-md flex-1 border-2 m-4 shadow-lg rounded-md bg-white">
       <img class="border-4 border-teal-600" src="/images/TickleHealthLogo.svg">
       <div class="p-4">
-        <h3 class="text-center text-2xl">Welcome to TickleHealth!</h3>
-        <p class="text-center">What is TickleHealth? It's fun. It's a game. It's a chance to learn more about health, diet, exercise and other stuff that can help keep you active, energized and Healthy! Earn points for correct answers, for challenging friends and family. Redeem points for prizes. Play when you want.</p>
+        <h3 class="text-center text-2xl">Question # of total. Ex: 2/5</h3>
+        <p class="text-center py-3">Generated Tickle Question. Example: Which has less fat per gram?</p>
       </div>
-      <div class="flex justify-around py-4">
-        <button class="bg-gray-400 px-3 py-2 border border-black border-b-2 shadow-lg hover:bg-blue-400" href="~/about.html">About TH</button>
-        <button class="bg-gray-400 px-3 py-2 border border-black border-b-2 shadow-lg hover:bg-blue-400" href="~/tip.html">Tickle Me!</button>
-      </div>
+      <form class="needs-validation flex justify-around py-4 overflow-hidden border">
+          <select class="p-3 border" multiple id="basic-select" data-mdb-validation="true" data-mdb-valid-feedback="This value is valid" data-mdb-invalid-feedback="This value is invalid" data-mdb-clear-button="true">
+            <option class="hover:shadow-lg py-2 rounded-md" value="1">Butter</option>
+            <option class="hover:shadow-lg py-2 rounded-md" value="2">Margarine</option>
+            <option class="hover:shadow-lg py-2 rounded-md" value="3">Olive Oil</option>
+            <option class="hover:shadow-lg py-2 rounded-md" value="4">Bacon Grease</option>
+          </select>
+          <button type="submit" id="submit" class="border bg-gray-400 px-4 my-12 shadow-lg hover:bg-blue-400 rounded-md">
+            Submit
+          </button>
+        </form>
     </div>
   </body>
 </html>
