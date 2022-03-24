@@ -4,6 +4,9 @@ import * as d3 from 'd3';
 import './style.css';
 
 function renderAttr(attr) {
+  if (attr === undefined) {
+    return {};
+  }
   Object.keys(attr).forEach(key => {
     if (key.indexOf('on') === 0) {
       attr[key] = new Function('e', attr[key]);
@@ -61,7 +64,7 @@ function renderElts(data) {
       elts.push(<span key={key++} {...renderAttr(d.attr)} >{renderElts(d.elts)}</span>);
       break;
     case 'h3':
-      elts.push(<h3 key={key++}>{renderElts(d.elts)}</h3>);
+      elts.push(<h3 key={key++} {...renderAttr(d.attr)}>{renderElts(d.elts)}</h3>);
       break;
     case 'p':
       elts.push(<p key={key++} {...renderAttr(d.attr)}>{renderElts(d.elts)}</p>);
@@ -74,6 +77,17 @@ function renderElts(data) {
   return elts;
 }
 
+window.gotoPage = (pageName) => {
+  window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
+    data: {
+      type: 'gotoPage',
+      data: pageName,
+    },
+    recompileCode: true,
+    dontUpdateID: false
+  }});  
+};
+
 window.transition = (action) => {
   alert(JSON.stringify(action));
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
@@ -85,11 +99,6 @@ window.transition = (action) => {
   }});
 }
 
-function setStyle(css) {
-  d3.select('head').append('style').html(css);
-}
-
-
 export class Viewer extends React.Component {
   componentDidMount() {
     d3.select('#graff-view').append('div').classed('done-rendering', true);
@@ -99,12 +108,14 @@ export class Viewer extends React.Component {
     const props = this.props;
     const obj = props.obj || {};
     const data = obj.status && [].concat(obj.data.data) || obj.data && [].concat(obj.data) || [];
-    const style = obj.style || "";
-    setStyle(style);
     const elts = renderElts(data);
     return (
-      <div>
-        {elts}
+      <div className="max-w-md flex-1 border-2 m-4 shadow-lg rounded-md bg-white">
+        <link rel="stylesheet" href="/L141/style.css" />
+        <img className="border-4 border-teal-600" src="/L141/logo.svg"></img>
+        <div id="L141-content">
+          {elts}
+        </div>
       </div>
     );
   }

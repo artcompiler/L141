@@ -33,6 +33,10 @@ module.exports = () => {
           use: ['style-loader', 'css-loader'],
         },
         {
+          test: /\.svg$/,
+          loader: 'svg-inline-loader'
+        },
+        {
           test: /\.json$/,
           loader: 'json-loader'
         }

@@ -1,4 +1,7 @@
 window.gcexports.globalLexicon = {
+  "encodeData" : { "tk": 1, "name": "ENCODE_DATA", "cls": "function", "length": 1 , "arity": 1 },
+  "location" : { "tk": 1, "name": "LOCATION", "cls": "function", "length": 2 , "arity": 2 },
+  "onclick" : { "tk": 1, "name": "ONCLICK", "cls": "function", "length": 2 , "arity": 2 },
   "border" : { "tk": 1, "name": "BORDER", "cls": "function", "length": 2 , "arity": 2 },
   "rounded-none" : { "tk": 1, "cls": "string", "val": "rounded-none", "length": 0, "arity": 0 },
   "rounded-sm" : { "tk": 1, "cls": "string", "val": "rounded-sm", "length": 0, "arity": 0 },

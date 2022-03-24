@@ -20,6 +20,31 @@ export class Checker extends BasisChecker {
       resume(err, val);
     });
   }
+  ENCODE_DATA(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+    });
+  }
+  LOCATION(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+      });
+    });
+  }
+  ONCLICK(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+      const err = [];
+      const val = node;
+      resume(err, val);
+      });
+    });
+  }
   BORDER(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       this.visit(node.elts[1], options, async (e1, v1) => {
@@ -30,47 +55,6 @@ export class Checker extends BasisChecker {
     });
   }
   BUTTON(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      const err = [];
-      const val = node;
-      resume(err, val);
-    });
-  }
-  FONT(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      this.visit(node.elts[1], options, async (e1, v1) => {
-      const err = [];
-      const val = node;
-      resume(err, val);
-      });
-    });
-  }
-  TEXT(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      this.visit(node.elts[1], options, async (e1, v1) => {
-      const err = [];
-      const val = node;
-      resume(err, val);
-      });
-    });
-  }
-  LABEL(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      this.visit(node.elts[1], options, async (e1, v1) => {
-      const err = [];
-      const val = node;
-      resume(err, val);
-      });
-    });
-  }
-  INPUT(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      const err = [];
-      const val = node;
-      resume(err, val);
-    });
-  }
-  TEXT_INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [];
       const val = node;
@@ -271,14 +255,6 @@ const colors = [
   'rose'
 ];
 
-const styles = [
-  't',
-  'b',
-  'r',
-  'l'
-];
-
-
 export class Transformer extends BasisTransformer {
   HELLO(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
@@ -288,9 +264,18 @@ export class Transformer extends BasisTransformer {
     });
   }
 
+  ENCODE_DATA(node, options, resume) {
+    // FIXME Construct and post a task to the root store and return the taskID.
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      console.log("ENCODE_DATA() v0=" + JSON.stringify(v0, null, 2));
+      const err = [];
+      const val = 'abc123';
+      resume(err, val);
+    });
+  }
+
   INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      v0 = v0 || {};
       const err = [].concat(e0);
       const val = {
         type: "input",
@@ -300,82 +285,32 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  TEXT_INPUT(node, options, resume) {
+  LOCATION(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
-      v0 = v0 || {};
-      v0.type = 'text';
-      const err = [].concat(e0);
-      const val = {
-        type: "input",
-        attr: attrFromVal(v0),
-      };
-      resume(err, val);
-    });
-  }
-  
-  LABEL(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      v0 = [].concat(v0);  // Make sure v0 is an array.
+      if (e0 && e0.length) {
+        resume(e0);
+      }
       this.visit(node.elts[1], options, async (e1, v1) => {
-        const attrs = [];
-        // v0.forEach((v) => {
-        //   if (v.includes(v.split('-')[0])){
-        //     attrs.push(`text-${v}`);
-        //   } else {
-        //     attrs.push(v);
-        //   }
-        // });
+        options.location = `location.href=\"${v0}\"xxx`;
         const err = [].concat(e0).concat(e1);
-        const val = {
-          type: 'label',
-          attr: attrFromVal(v0),
-          elts: [].concat(v1),
-        };
+        const val = v1;
+        console.log("LOCATION() val=" + JSON.stringify(val, null, 2));
         resume(err, val);
       });
     });
   }
 
-  TEXT(node, options, resume) {
+  ONCLICK(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0 = [].concat(v0);  // Make sure v0 is an array.
       this.visit(node.elts[1], options, async (e1, v1) => {
-        const attrs = [];
+        const attrs = {};
         v0.forEach((v) => {
-          if (v.includes(v.split('-')[0])){
-            attrs.push(`text-${v}`);
-          } else if (colors.includes(v.split('-')[0])){
-            attrs.push(`text-${v}`);
-          } else {
-            attrs.push(v);
-          }
+          attrs.onClick = v;
         });
         v1.attr = attrsFromVal(attrs, v1.attr);
         const err = [].concat(e0).concat(e1);
         const val = v1;
-        resume(err, val);
-      });
-    });
-  }
-
-  FONT(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      v0 = [].concat(v0);  // Make sure v0 is an array.
-      // console.log("FONT() v0=" + JSON.stringify(v0, null, 2));
-      this.visit(node.elts[1], options, async (e1, v1) => {
-        // console.log("FONT() v1=" + JSON.stringify(v1, null, 2));
-        const attrs = [];
-        v0.forEach((v) => {
-          if (v.includes(v.split('-')[0])){
-            attrs.push(`font-${v}`);
-          } else {
-            attrs.push(v);
-          }
-        });
-        v1.attr = attrsFromVal(attrs, v1.attr);
-        const err = [].concat(e0).concat(e1);
-        const val = v1;
-        console.log("FONT() val=" + JSON.stringify(val, null, 2));
         resume(err, val);
       });
     });
@@ -390,8 +325,6 @@ export class Transformer extends BasisTransformer {
           if (Number.isInteger(v)) {
             attrs.push(`border-${v}`);
           } else if (colors.includes(v.split('-')[0])){
-            attrs.push(`border-${v}`);
-          } else if (styles.includes(v.split('-')[0])){
             attrs.push(`border-${v}`);
           } else {
             attrs.push(v);
@@ -775,7 +708,12 @@ export class Transformer extends BasisTransformer {
     }
     this.visit(node.elts[0], options, (e0, v0) => {
       const err = e0;
-      const val = v0.pop();  // Return the value of the last expression.
+      let val = v0.pop();  // Return the value of the last expression.
+      if (options.data && options.data.type === 'gotoPage') {
+        val = val.pages[options.data.data];
+      } else {
+        val = val.pages.signUp;
+      }
       resume(err, val);
     });
   }
@@ -791,25 +729,25 @@ export class Renderer extends BasisRenderer {
   render(options, resume) {
     // Do some rendering here.
     // THIS IS A TEST.
-    fs.readFile('src/style.css', (err, css) => {
-      postcss([tailwindcss, autoprefixer]).process(css, {from:undefined}).then(result => {
-        let style = result.css;
-        if (DEBUGGING) {
-          fs.writeFile(`l141-debug.css`, style, {encoding: 'utf8'}, (err) => {
-            if (err) {
-              console.log(err);
-            }
-          });
-        }
+    // fs.readFile('src/style.css', (err, css) => {
+    //   postcss([tailwindcss, autoprefixer]).process(css, {from:undefined}).then(result => {
+    //     let style = result.css;
+    //     if (DEBUGGING) {
+    //       fs.writeFile(`l141-debug-${Date.now()}.css`, style, {encoding: 'utf8'}, (err) => {
+    //         if (err) {
+    //           console.log(err);
+    //         }
+    //       });
+    //     }
         const err = [];
         const val = {
           data: this.data,
-          style: style,
+    //      style: style,
           errors: [],
         };
         resume(err, val);
-      });
-    });
+    //   });
+    // });
   }
 }
 
