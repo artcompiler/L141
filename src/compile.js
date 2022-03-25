@@ -27,12 +27,21 @@ export class Checker extends BasisChecker {
       resume(err, val);
     });
   }
+  LABEL(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        const err = [];
+        const val = node;
+        resume(err, val);
+      });
+    });
+  }
   LOCATION(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       this.visit(node.elts[1], options, async (e1, v1) => {
-      const err = [];
-      const val = node;
-      resume(err, val);
+        const err = [];
+        const val = node;
+        resume(err, val);
       });
     });
   }
@@ -274,12 +283,27 @@ export class Transformer extends BasisTransformer {
     });
   }
 
+  LABEL(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        const err = [].concat(e0).concat(e1);
+        const val = {
+          type: "label",
+          attr: attrsFromVal(v0),
+          elts: v1,
+        };
+        resume(err, val);
+      });
+    });
+  }
+
   INPUT(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [].concat(e0);
       const val = {
         type: "input",
-        attr: attrFromVal(v0),
+        attr: attrsFromVal(v0),
       };
       resume(err, val);
     });
@@ -682,7 +706,6 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  // Debugging
   LIST(node, options, resume) {
     let err = [];
     let val = [];
@@ -691,10 +714,11 @@ export class Transformer extends BasisTransformer {
     } else {
       for (let i = 0; i < node.elts.length; i++) {
         let elt = node.elts[i];
+        options = Object.assign({}, options, { key: i });
         this.visit(elt, options, (e0, v0) => {
           err = err.concat(e0);
-          val.push(v0);
-          if (val.length === node.elts.length) {
+          val[i] = v0;
+          if (Object.keys(val).length === node.elts.length) {
             resume(err, val);
           }
         });
@@ -702,6 +726,12 @@ export class Transformer extends BasisTransformer {
     }
   }
 
+  dumpPool() {
+    Object.keys(this.nodePool).forEach((key) => {
+      console.log(`${key} => ${JSON.stringify(this.nodePool[key], null, 2)}`);
+    });
+  }
+  
   PROG(node, options, resume) {
     if (!options) {
       options = {};
@@ -714,6 +744,7 @@ export class Transformer extends BasisTransformer {
       } else {
         val = val.pages.signUp;
       }
+      // console.log("PROG() val=" + JSON.stringify(val, null, 2));
       resume(err, val);
     });
   }
