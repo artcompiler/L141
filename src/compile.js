@@ -276,11 +276,111 @@ export class Transformer extends BasisTransformer {
   ENCODE_DATA(node, options, resume) {
     // FIXME Construct and post a task to the root store and return the taskID.
     this.visit(node.elts[0], options, async (e0, v0) => {
-      console.log("ENCODE_DATA() v0=" + JSON.stringify(v0, null, 2));
       const err = [];
       const val = 'abc123';
       resume(err, val);
     });
+  }
+
+  QUIZ(node, options, resume) {
+    const err = [];
+    const val = {
+      "type": "div",
+      "attr": {
+        "className": "text-left pb-4 ml-32"
+      },
+      "elts": [{
+        "type": "h3",
+        "attr": {
+          "className": "text-2xl pb-4"
+        },
+        "elts": [
+          "Quiz #1"
+        ]
+      }, {
+        "type": "div",
+        "attr": {
+          "0": "w-64"
+        },
+        "elts": [
+          {
+            "type": "input",
+            "attr": {
+              "type": "radio",
+              "name": "quiz1"
+            }
+          },
+          {
+            "type": "label",
+            "attr": {
+              "className": "px-2 "
+            },
+            "elts": "First Choice"
+          }
+        ]
+      }, {
+        "type": "div",
+        "attr": {},
+        "elts": [
+          {
+            "type": "input",
+            "attr": {
+              "type": "radio",
+              "name": "quiz1"
+            }
+          },
+          {
+            "type": "label",
+            "attr": {
+              "className": "px-2 "
+            },
+            "elts": "Second Choice"
+          }
+        ]
+      }, {
+        "type": "div",
+        "attr": {},
+        "elts": [
+          {
+            "type": "input",
+            "attr": {
+              "name": "quiz1",
+              "type": "radio"
+            }
+          },
+          {
+            "type": "label",
+            "attr": {
+              "className": "px-2 "
+            },
+            "elts": "Third Choice "
+          }
+        ]
+      }, {
+        "type": "div",
+        "attr": {
+          "0": "w-64"
+        },
+        "elts": [
+          {
+            "type": "input",
+            "attr": {
+              "name": "quiz1",
+              "type": "radio"
+            }
+          },
+          {
+            "type": "label",
+            "attr": {
+              "className": "px-2 "
+            },
+            "elts": "Fourth Choice"
+          }
+        ]
+      }
+              ]
+    };
+    resume(err, val);
   }
 
   LABEL(node, options, resume) {
@@ -318,7 +418,6 @@ export class Transformer extends BasisTransformer {
         options.location = `location.href=\"${v0}\"xxx`;
         const err = [].concat(e0).concat(e1);
         const val = v1;
-        console.log("LOCATION() val=" + JSON.stringify(val, null, 2));
         resume(err, val);
       });
     });
@@ -616,7 +715,6 @@ export class Transformer extends BasisTransformer {
           attr: attrFromVal(v0),
           elts: v1,
         };
-        console.log("a() val=" + JSON.stringify(val, null, 2));
         resume(err, val);
       });
     });
@@ -744,7 +842,6 @@ export class Transformer extends BasisTransformer {
       } else {
         val = val.pages.signUp;
       }
-      // console.log("PROG() val=" + JSON.stringify(val, null, 2));
       resume(err, val);
     });
   }
