@@ -284,7 +284,144 @@ export class Transformer extends BasisTransformer {
 
   QUIZ(node, options, resume) {
     const err = [];
-    const val = {
+    const val = this.renderMultipleChoiceQuestion();
+    resume(err, val);
+  }
+
+  SAMPLE_DATA(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      const err = [].concat(e0);
+      const val = v0;
+      resume(err, val);
+    });
+  }
+
+  multipleChoiceQuestion = {
+    "type": "div",
+    "attr": {
+      "className": "text-left pb-4 ml-32"
+    },
+    "elts": [{
+      "type": "h3",
+      "attr": {
+        "className": "text-2xl pb-4"
+      },
+      "elts": [
+        "Quiz #1"
+      ]
+    }, {
+      "type": "div",
+      "attr": {
+        "0": "w-64"
+      },
+      "elts": [
+        {
+          "type": "input",
+          "attr": {
+            "type": "radio",
+            "name": "quiz1"
+          }
+        },
+        {
+          "type": "label",
+          "attr": {
+            "className": "px-2 "
+          },
+          "elts": "1st Choice"
+        }
+      ]
+    }, {
+      "type": "div",
+      "attr": {},
+      "elts": [
+        {
+          "type": "input",
+          "attr": {
+            "type": "radio",
+            "name": "quiz1"
+          }
+        },
+        {
+          "type": "label",
+          "attr": {
+            "className": "px-2 "
+          },
+          "elts": "Second Choice"
+        }
+      ]
+    }, {
+      "type": "div",
+      "attr": {},
+      "elts": [
+        {
+          "type": "input",
+          "attr": {
+            "name": "quiz1",
+            "type": "radio"
+          }
+        },
+        {
+          "type": "label",
+          "attr": {
+            "className": "px-2 "
+          },
+          "elts": "Third Choice "
+        }
+      ]
+    }, {
+      "type": "div",
+      "attr": {
+        "0": "w-64"
+      },
+      "elts": [
+        {
+          "type": "input",
+          "attr": {
+            "name": "quiz1",
+            "type": "radio"
+          }
+        },
+        {
+          "type": "label",
+          "attr": {
+            "className": "px-2 "
+          },
+          "elts": "Fourth Choice"
+        }
+      ]
+    }]
+  }
+
+  renderMultipleChoiceQuestion(attrs, data) {
+
+    const renderChoice = (choice) => {
+      return {
+        "type": "div",
+        "attr": {},
+        "elts": [
+          {
+            "type": "input",
+            "attr": {
+              "type": "radio",
+              "name": "quiz1"
+            }
+          },
+          {
+            "type": "label",
+            "attr": {
+              "className": "px-2 "
+            },
+            "elts": choice.response,
+          }
+        ]
+      };
+    };
+    
+    const choices = [];
+    data.choices.forEach((choice) => {
+      choices.push(renderChoice(choice));
+    });
+    const question = {
       "type": "div",
       "attr": {
         "className": "text-left pb-4 ml-32"
@@ -295,92 +432,22 @@ export class Transformer extends BasisTransformer {
           "className": "text-2xl pb-4"
         },
         "elts": [
-          "Quiz #1"
+          data.context,
         ]
-      }, {
-        "type": "div",
-        "attr": {
-          "0": "w-64"
-        },
-        "elts": [
-          {
-            "type": "input",
-            "attr": {
-              "type": "radio",
-              "name": "quiz1"
-            }
-          },
-          {
-            "type": "label",
-            "attr": {
-              "className": "px-2 "
-            },
-            "elts": "First Choice"
-          }
-        ]
-      }, {
-        "type": "div",
-        "attr": {},
-        "elts": [
-          {
-            "type": "input",
-            "attr": {
-              "type": "radio",
-              "name": "quiz1"
-            }
-          },
-          {
-            "type": "label",
-            "attr": {
-              "className": "px-2 "
-            },
-            "elts": "Second Choice"
-          }
-        ]
-      }, {
-        "type": "div",
-        "attr": {},
-        "elts": [
-          {
-            "type": "input",
-            "attr": {
-              "name": "quiz1",
-              "type": "radio"
-            }
-          },
-          {
-            "type": "label",
-            "attr": {
-              "className": "px-2 "
-            },
-            "elts": "Third Choice "
-          }
-        ]
-      }, {
-        "type": "div",
-        "attr": {
-          "0": "w-64"
-        },
-        "elts": [
-          {
-            "type": "input",
-            "attr": {
-              "name": "quiz1",
-              "type": "radio"
-            }
-          },
-          {
-            "type": "label",
-            "attr": {
-              "className": "px-2 "
-            },
-            "elts": "Fourth Choice"
-          }
-        ]
-      }
-              ]
-    };
-    resume(err, val);
+      }, ...choices
+    ]};
+    return question;
+  }
+
+  MULTIPLE_CHOICE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        const err = [].concat(e0).concat(e1);
+        const val = this.renderMultipleChoiceQuestion(v0, v1);
+        resume(err, val);
+      });
+    });
   }
 
   LABEL(node, options, resume) {

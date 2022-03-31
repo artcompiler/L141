@@ -1,6 +1,7 @@
 window.gcexports.globalLexicon = {
   "quiz" : { "tk": 1, "name": "QUIZ", "cls": "function", "length": 0 , "arity": 0 },
-  "encodeData" : { "tk": 1, "name": "ENCODE_DATA", "cls": "function", "length": 1 , "arity": 1 },
+  "multiple-choice" : { "tk": 1, "name": "MULTIPLE_CHOICE", "cls": "function", "length": 2 , "arity": 2 },
+  "sample-data" : { "tk": 1, "name": "SAMPLE_DATA", "cls": "function", "length": 1 , "arity": 1 },
   "location" : { "tk": 1, "name": "LOCATION", "cls": "function", "length": 2 , "arity": 2 },
   "onclick" : { "tk": 1, "name": "ONCLICK", "cls": "function", "length": 2 , "arity": 2 },
   "border" : { "tk": 1, "name": "BORDER", "cls": "function", "length": 2 , "arity": 2 },
