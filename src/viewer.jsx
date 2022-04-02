@@ -78,10 +78,12 @@ function renderElts(data) {
 }
 
 window.gotoPage = (pageName) => {
+  const state = window.gcexports.state;
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data: {
       type: 'gotoPage',
-      data: pageName,
+      pageName,
+      state,
     },
     recompileCode: true,
     dontUpdateID: false

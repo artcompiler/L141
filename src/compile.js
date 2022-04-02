@@ -283,9 +283,13 @@ export class Transformer extends BasisTransformer {
   }
 
   QUIZ(node, options, resume) {
-    const err = [];
-    const val = this.renderMultipleChoiceQuestion();
-    resume(err, val);
+    try {
+      const err = [];
+      const val = this.renderMultipleChoiceQuestion();
+      resume(err, val);
+    } catch (x) {
+      resume(x.message);
+    }
   }
 
   SAMPLE_DATA(node, options, resume) {
@@ -296,104 +300,8 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  multipleChoiceQuestion = {
-    "type": "div",
-    "attr": {
-      "className": "text-left pb-4 ml-32"
-    },
-    "elts": [{
-      "type": "h3",
-      "attr": {
-        "className": "text-2xl pb-4"
-      },
-      "elts": [
-        "Quiz #1"
-      ]
-    }, {
-      "type": "div",
-      "attr": {
-        "0": "w-64"
-      },
-      "elts": [
-        {
-          "type": "input",
-          "attr": {
-            "type": "radio",
-            "name": "quiz1"
-          }
-        },
-        {
-          "type": "label",
-          "attr": {
-            "className": "px-2 "
-          },
-          "elts": "1st Choice"
-        }
-      ]
-    }, {
-      "type": "div",
-      "attr": {},
-      "elts": [
-        {
-          "type": "input",
-          "attr": {
-            "type": "radio",
-            "name": "quiz1"
-          }
-        },
-        {
-          "type": "label",
-          "attr": {
-            "className": "px-2 "
-          },
-          "elts": "Second Choice"
-        }
-      ]
-    }, {
-      "type": "div",
-      "attr": {},
-      "elts": [
-        {
-          "type": "input",
-          "attr": {
-            "name": "quiz1",
-            "type": "radio"
-          }
-        },
-        {
-          "type": "label",
-          "attr": {
-            "className": "px-2 "
-          },
-          "elts": "Third Choice "
-        }
-      ]
-    }, {
-      "type": "div",
-      "attr": {
-        "0": "w-64"
-      },
-      "elts": [
-        {
-          "type": "input",
-          "attr": {
-            "name": "quiz1",
-            "type": "radio"
-          }
-        },
-        {
-          "type": "label",
-          "attr": {
-            "className": "px-2 "
-          },
-          "elts": "Fourth Choice"
-        }
-      ]
-    }]
-  }
-
   renderMultipleChoiceQuestion(attrs, data) {
-
+    const self = this;
     const renderChoice = (choice) => {
       return {
         "type": "div",
@@ -403,7 +311,8 @@ export class Transformer extends BasisTransformer {
             "type": "input",
             "attr": {
               "type": "radio",
-              "name": "quiz1"
+              "name": "quiz1",
+              "onInput": `window.gcexports.state = { choice: ${JSON.stringify(choice)} }`, 
             }
           },
           {
@@ -424,7 +333,7 @@ export class Transformer extends BasisTransformer {
     const question = {
       "type": "div",
       "attr": {
-        "className": "text-left pb-4 ml-32"
+        "className": "pb-4"
       },
       "elts": [{
         "type": "h3",
@@ -440,14 +349,18 @@ export class Transformer extends BasisTransformer {
   }
 
   MULTIPLE_CHOICE(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      v0 = [].concat(v0);  // Make sure v0 is an array.
-      this.visit(node.elts[1], options, async (e1, v1) => {
-        const err = [].concat(e0).concat(e1);
-        const val = this.renderMultipleChoiceQuestion(v0, v1);
-        resume(err, val);
+    try {
+      this.visit(node.elts[0], options, async (e0, v0) => {
+        v0 = [].concat(v0);  // Make sure v0 is an array.
+        this.visit(node.elts[1], options, async (e1, v1) => {
+          const err = [].concat(e0).concat(e1);
+          const val = this.renderMultipleChoiceQuestion(v0, v1);
+          resume(err, val);
+        });
       });
-    });
+    } catch (x) {
+      resume(x.message);
+    }
   }
 
   LABEL(node, options, resume) {
@@ -904,10 +817,12 @@ export class Transformer extends BasisTransformer {
     this.visit(node.elts[0], options, (e0, v0) => {
       const err = e0;
       let val = v0.pop();  // Return the value of the last expression.
+//      console.log("PROG() val=" + JSON.stringify(val, null, 2));
+      console.log("PROG() options=" + JSON.stringify(options, null, 2));
       if (options.data && options.data.type === 'gotoPage') {
-        val = val.pages[options.data.data];
+        val = val.pages[options.data.pageName];
       } else {
-        val = val.pages.signUp;
+        val = val.pages.start;
       }
       resume(err, val);
     });
