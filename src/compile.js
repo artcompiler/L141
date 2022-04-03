@@ -312,7 +312,7 @@ export class Transformer extends BasisTransformer {
             "attr": {
               "type": "radio",
               "name": "quiz1",
-              "onInput": `window.gcexports.state = { choice: ${JSON.stringify(choice)} }`, 
+              "onInput": `gotoPage('${choice.feedback}')`,
             }
           },
           {
@@ -357,6 +357,19 @@ export class Transformer extends BasisTransformer {
           const val = this.renderMultipleChoiceQuestion(v0, v1);
           resume(err, val);
         });
+      });
+    } catch (x) {
+      resume(x.message);
+    }
+  }
+
+  MULTIPLE_CHOICE_FEEDBACK(node, options, resume) {
+    try {
+      this.visit(node.elts[0], options, async (e0, v0) => {
+        v0 = [].concat(v0);  // Make sure v0 is an array.
+        const err = [].concat(e0);
+        const val = this.renderMultipleChoiceQuestion(v0);
+        resume(err, val);
       });
     } catch (x) {
       resume(x.message);
@@ -838,24 +851,12 @@ export class Renderer extends BasisRenderer {
   }
   render(options, resume) {
     // Do some rendering here.
-    // THIS IS A TEST.
-    // fs.readFile('src/style.css', (err, css) => {
-    //   postcss([tailwindcss, autoprefixer]).process(css, {from:undefined}).then(result => {
-    //     let style = result.css;
-    //     if (DEBUGGING) {
-    //       fs.writeFile(`l141-debug-${Date.now()}.css`, style, {encoding: 'utf8'}, (err) => {
-    //         if (err) {
-    //           console.log(err);
-    //         }
-    //       });
-    //     }
-        const err = [];
-        const val = {
-          data: this.data,
-    //      style: style,
-          errors: [],
-        };
-        resume(err, val);
+    const err = [];
+    const val = {
+      data: this.data,
+      errors: [],
+    };
+    resume(err, val);
     //   });
     // });
   }
