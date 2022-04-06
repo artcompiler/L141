@@ -77,36 +77,39 @@ function renderElts(data) {
   return elts;
 }
 
-window.gotoPage = (pageName) => {
-  const state = window.gcexports.state;
+window.showAnswer = (choice) => {
+  const data = {
+    action: {
+      type: 'showAnswer',
+      choice,
+    }
+  };
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
-    data: {
-      type: 'gotoPage',
-      pageName,
-      state,
-    },
+    data,
     recompileCode: true,
     dontUpdateID: false
-  }});  
+  }});
 };
 
-window.transition = (action) => {
-  alert(JSON.stringify(action));
+window.gotoPage = (pageName) => {
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data: {
-      action,
+      action: {
+        type: 'gotoPage',
+        pageName,
+      },
     },
     recompileCode: true,
     dontUpdateID: false
   }});
-}
+};
 
 export class Viewer extends React.Component {
   componentDidMount() {
     document.title = "TickleHealth";
     d3.select('#graff-view').append('div').classed('done-rendering', true);
   }
-  
+
   render() {
     const props = this.props;
     const obj = props.obj || {};

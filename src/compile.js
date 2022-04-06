@@ -282,20 +282,10 @@ export class Transformer extends BasisTransformer {
     });
   }
 
-  QUIZ(node, options, resume) {
-    try {
-      const err = [];
-      const val = this.renderMultipleChoiceQuestion();
-      resume(err, val);
-    } catch (x) {
-      resume(x.message);
-    }
-  }
-
   SAMPLE_DATA(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [].concat(e0);
-      const val = v0;
+      const val = options.data && options.data.quiz || v0;
       resume(err, val);
     });
   }
@@ -312,7 +302,7 @@ export class Transformer extends BasisTransformer {
             "attr": {
               "type": "radio",
               "name": "quiz1",
-              "onInput": `gotoPage('${choice.feedback}')`,
+              "onInput": `showAnswer(${JSON.stringify(choice)})`,
             }
           },
           {
@@ -320,7 +310,7 @@ export class Transformer extends BasisTransformer {
             "attr": {
               "className": "px-2 "
             },
-            "elts": choice.response,
+            "elts": choice.answer,
           }
         ]
       };
@@ -341,11 +331,40 @@ export class Transformer extends BasisTransformer {
           "className": "text-2xl pb-4"
         },
         "elts": [
-          data.context,
+          data.question,
         ]
       }, ...choices
     ]};
     return question;
+  }
+
+  renderMultipleChoiceAnswer(attrs, choice) {
+    const answer = {
+      "type": "div",
+      "attr": {},
+      "elts": [{
+        "type": "div",
+        "attr": {
+          "className": "p-4 ml-4"
+        },
+        "elts": [{
+          "type": "h3",
+          "attr": {
+            "className": "text-2xl pb-4"
+          },
+          "elts": [
+            choice.points === 1 && 'Correct!' || 'Nice try.',
+          ]
+        }, {
+          "type": "div",
+          "attr": {},
+          "elts": [
+            choice.message,
+          ]
+        }]
+      }]
+    };
+    return answer;
   }
 
   MULTIPLE_CHOICE(node, options, resume) {
@@ -353,8 +372,10 @@ export class Transformer extends BasisTransformer {
       this.visit(node.elts[0], options, async (e0, v0) => {
         v0 = [].concat(v0);  // Make sure v0 is an array.
         this.visit(node.elts[1], options, async (e1, v1) => {
+//          console.log("MULTIPLE_CHOICE() v1=" + JSON.stringify(v1, null, 2));
           const err = [].concat(e0).concat(e1);
           const val = this.renderMultipleChoiceQuestion(v0, v1);
+//          console.log("MULTIPLE_CHOICE() val=" + JSON.stringify(val, null, 2));
           resume(err, val);
         });
       });
@@ -363,13 +384,22 @@ export class Transformer extends BasisTransformer {
     }
   }
 
-  MULTIPLE_CHOICE_FEEDBACK(node, options, resume) {
+  MULTIPLE_CHOICE_ANSWER(node, options, resume) {
     try {
       this.visit(node.elts[0], options, async (e0, v0) => {
         v0 = [].concat(v0);  // Make sure v0 is an array.
-        const err = [].concat(e0);
-        const val = this.renderMultipleChoiceQuestion(v0);
-        resume(err, val);
+        this.visit(node.elts[1], options, async (e1, v1) => {
+          const choice =
+                options.data
+                && options.data.action
+                && options.data.action.choice
+                || { points: -1, message: 'No selection' };
+//          console.log("MULTIPLE_CHOICE_ANSWER() v1=" + JSON.stringify(v1, null, 2));
+          const err = [].concat(e0).concat(e1);
+          const val = this.renderMultipleChoiceAnswer(v0, choice);
+//          console.log("MULTIPLE_CHOICE_ANSWER() val=" + JSON.stringify(val, null, 2));
+          resume(err, val);
+        });
       });
     } catch (x) {
       resume(x.message);
@@ -824,16 +854,20 @@ export class Transformer extends BasisTransformer {
   }
   
   PROG(node, options, resume) {
+    console.log("PROG() options=" + JSON.stringify(options, null, 2));
     if (!options) {
       options = {};
     }
     this.visit(node.elts[0], options, (e0, v0) => {
       const err = e0;
       let val = v0.pop();  // Return the value of the last expression.
-//      console.log("PROG() val=" + JSON.stringify(val, null, 2));
-      console.log("PROG() options=" + JSON.stringify(options, null, 2));
-      if (options.data && options.data.type === 'gotoPage') {
-        val = val.pages[options.data.pageName];
+      if (options.data && options.data.action) {
+        const action = options.data.action;
+        if (action.type === 'gotoPage') {
+          val = val.pages[action.pageName];
+        } else if (action.type === 'showAnswer') {
+          val = val.pages['answer'];
+        }
       } else {
         val = val.pages.start;
       }
