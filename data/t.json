@@ -1,0 +1,66 @@
+{
+  quiz: [
+    {
+      question: "What's is the most important thing to check on a nutrition label?",
+      choices: [{
+        answer: 'Sugar',
+        points: 0,
+        message: "The amount of sugar is an important factor, but you first need to know how much fat and sugar you're consuming. So look at the serving size first.",
+      }, {
+        answer: 'Fat',
+        points: 0,
+        message: "The amount of fat in your food is an important factor, but you first need to know how much fat and sugar you're consuming. So look at the serving size first.",
+      }, {
+        answer: 'Serving Size',
+        points: 1,
+        message: "Knowing the amount per serving is the most important thing on a nutrition label.",
+      }, {
+        answer: 'Calories',
+        points: 0,
+        message: "Knowing the calorie count is important, but you first need to know how much fat and sugar you're consuming. So look at the serving size first.",
+      }, {
+        answer: 'Fiber',
+        points: 0,
+        message: "Fiber is an important factor, but you first need to know how much fat and sugar you're consuming. So look at the serving size first.",
+      }]
+    }, {
+      question: "What nutrients do you want to eat less of?",
+      choices: [{
+        answer: "Saturated Fat",
+        points: 0,
+        message: "The amount of sugar is an important factor, but you first need to know how much fat and sugar you're consuming. So look at the serving size first.Not exactly... it's actually Saturated Fat, Sodium, and Added Sugars.",
+      }, {
+        answer: "Added Sugars",
+        points: 0,
+        message: "Not exactly... it's actually Saturated Fat, Sodium, and Added Sugars.",
+      }, {
+        answer: "Sodium",
+        points: 0,
+        message: "Not exactly... it's actually Saturated Fat, Sodium, and Added Sugars.",
+      }, {
+        answer: "All of the above",
+        points: 0,
+        message: "Correct! These three ingredients are ssociated with adverse health effects – and Americans generally consume too much of them.",
+      }]
+    }, {
+      question: "What is the FDA recommended amount of Vitamin C for the average adult?",
+      choices: [{
+        answer: "60 mg",
+        points: 0,
+        message: "Correct! Just 60 mg of Vitamin C, otherwise know as ascorbic acid, is needed by the body.",
+      }, {
+        answer: "120 mg",
+        points: 0,
+        message: "Incorrect... That's twice the normal required amount needed.",
+      }, {
+        answer: "250 mg",
+        points: 0,
+        message: "Incorrect... That's over 4 times the normal required amount.",
+      }, {
+        answer: "1000 mg",
+        points: 0,
+        message: "Incorrect... Only 60 mg daily is needed.",
+      }]
+    }
+  ]
+}
