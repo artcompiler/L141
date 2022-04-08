@@ -77,10 +77,27 @@ function renderElts(data) {
   return elts;
 }
 
+window.showQuestion = () => {
+  const data = {
+    action: {
+      type: 'gotoPage',
+      pageName: 'question',
+      index: window.gcexports.state.index + 1 || 1,
+    }
+  };
+  window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
+    data,
+    recompileCode: true,
+    dontUpdateID: false
+  }});
+};
+
 window.showAnswer = (choice) => {
   const data = {
     action: {
-      type: 'showAnswer',
+      type: 'gotoPage',
+      pageName: 'answer',
+      index: window.gcexports.state.index || 0,
       choice,
     }
   };
@@ -113,8 +130,10 @@ export class Viewer extends React.Component {
   render() {
     const props = this.props;
     const obj = props.obj || {};
-    const data = obj.status && [].concat(obj.data.data) || obj.data && [].concat(obj.data) || [];
-    const elts = renderElts(data);
+    const data = obj.status && [].concat(obj.data.data) || obj.data || {};
+    const page = data.page || [];
+    window.gcexports.state = data.state || {}
+    const elts = renderElts(page);
     return (
       <div className="max-w-md flex-1 border-2 m-4 shadow-lg rounded-md bg-white">
         <link rel="icon" type="image/png" href="/L141/favicon.png" />

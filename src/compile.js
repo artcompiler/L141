@@ -338,6 +338,59 @@ export class Transformer extends BasisTransformer {
     return question;
   }
 
+  renderPoints(attrs, data) {
+    const points = {
+      "type": "div",
+      "attr": {
+        "className": "pb-4"
+      },
+      "elts": [{
+        "type": "h3",
+        "attr": {
+          "className": "text-2xl pb-4"
+        },
+        "elts": [
+          "You got 3 out of 3 question correct",
+        ]
+      },
+    ]};
+    return points;
+  }
+
+  MULTIPLE_CHOICE(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        try {
+          // console.log("MULTIPLE_CHOICE() v1=" + JSON.stringify(v1, null, 2));
+          const index =
+                options.data
+                && options.data.action
+                && options.data.action.index
+                || 0;
+          const err = [].concat(e0).concat(e1);
+          const question = v1 instanceof Array && v1[index];
+          let val;
+          if (question === undefined) {
+            // We have asked all the questions. Show the next page.
+            val = this.renderPoints();
+            options.data.action = {
+              type: "gotoPage",
+              pageName: "healthTip",
+            };
+          } else {
+            val = this.renderMultipleChoiceQuestion(v0, question);
+          }
+          // console.log("MULTIPLE_CHOICE() val=" + JSON.stringify(val, null, 2));
+          resume(err, val);
+        } catch (x) {
+          console.log(x.stack);
+          resume(x.message);
+        }
+      });
+    });
+  }
+
   renderMultipleChoiceAnswer(attrs, choice) {
     const answer = {
       "type": "div",
@@ -348,14 +401,6 @@ export class Transformer extends BasisTransformer {
           "className": "p-4 ml-4"
         },
         "elts": [{
-          "type": "h3",
-          "attr": {
-            "className": "text-2xl pb-4"
-          },
-          "elts": [
-            choice.points === 1 && 'Correct!' || 'Nice try.',
-          ]
-        }, {
           "type": "div",
           "attr": {},
           "elts": [
@@ -367,25 +412,9 @@ export class Transformer extends BasisTransformer {
     return answer;
   }
 
-  MULTIPLE_CHOICE(node, options, resume) {
-    try {
-      this.visit(node.elts[0], options, async (e0, v0) => {
-        v0 = [].concat(v0);  // Make sure v0 is an array.
-        this.visit(node.elts[1], options, async (e1, v1) => {
-//          console.log("MULTIPLE_CHOICE() v1=" + JSON.stringify(v1, null, 2));
-          const err = [].concat(e0).concat(e1);
-          const val = this.renderMultipleChoiceQuestion(v0, v1);
-//          console.log("MULTIPLE_CHOICE() val=" + JSON.stringify(val, null, 2));
-          resume(err, val);
-        });
-      });
-    } catch (x) {
-      resume(x.message);
-    }
-  }
-
   MULTIPLE_CHOICE_ANSWER(node, options, resume) {
     try {
+      // console.log("MULTIPLE_CHOICE_ANSWER() options=" + JSON.stringify(options, null, 2));
       this.visit(node.elts[0], options, async (e0, v0) => {
         v0 = [].concat(v0);  // Make sure v0 is an array.
         this.visit(node.elts[1], options, async (e1, v1) => {
@@ -394,14 +423,15 @@ export class Transformer extends BasisTransformer {
                 && options.data.action
                 && options.data.action.choice
                 || { points: -1, message: 'No selection' };
-//          console.log("MULTIPLE_CHOICE_ANSWER() v1=" + JSON.stringify(v1, null, 2));
+          // console.log("MULTIPLE_CHOICE_ANSWER() choice=" + JSON.stringify(choice, null, 2));
           const err = [].concat(e0).concat(e1);
           const val = this.renderMultipleChoiceAnswer(v0, choice);
-//          console.log("MULTIPLE_CHOICE_ANSWER() val=" + JSON.stringify(val, null, 2));
+          // console.log("MULTIPLE_CHOICE_ANSWER() val=" + JSON.stringify(val, null, 2));
           resume(err, val);
         });
       });
     } catch (x) {
+      console.log(x.stack);
       resume(x.message);
     }
   }
@@ -854,24 +884,29 @@ export class Transformer extends BasisTransformer {
   }
   
   PROG(node, options, resume) {
-    console.log("PROG() options=" + JSON.stringify(options, null, 2));
+    // console.log("PROG() options=" + JSON.stringify(options, null, 2));
     if (!options) {
       options = {};
     }
     this.visit(node.elts[0], options, (e0, v0) => {
       const err = e0;
       let val = v0.pop();  // Return the value of the last expression.
+      let index = 0;
       if (options.data && options.data.action) {
         const action = options.data.action;
         if (action.type === 'gotoPage') {
           val = val.pages[action.pageName];
-        } else if (action.type === 'showAnswer') {
-          val = val.pages['answer'];
+          index = action.index || index;
         }
       } else {
         val = val.pages.start;
       }
-      resume(err, val);
+      resume(err, {
+        page: val,
+        state: {
+          index: index
+        },
+      });
     });
   }
 }

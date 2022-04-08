@@ -1,6 +1,28 @@
 {
+  customerID: 1234,
+  customerName: "Emma Thompson",
+  gettingStarted: {
+    type: "info",
+    title: "Getting Started",
+    body: "Getting started text.",
+  },
+  healthTip: {
+    type: "info",
+    title: "Health Tip",
+    body: "Health tip text.",
+  },
+  points: {
+    type: "points",
+    title: "Your Points",
+    body: "You got x of y questions correct. You've added z points to your total."
+  },
+  profile: {
+    type: "profile",
+    title: "Profile",
+  },
   quiz: [
     {
+      type: "question",
       question: "What's is the most important thing to check on a nutrition label?",
       choices: [{
         answer: 'Sugar',
