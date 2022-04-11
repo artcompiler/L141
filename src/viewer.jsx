@@ -1,7 +1,35 @@
 /* Copyright (c) 2021, ARTCOMPILER INC */
-import * as React from 'react';
+import React from 'react';
 import * as d3 from 'd3';
 import './style.css';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { Provider, useSelector, useDispatch } from 'react-redux';
+
+const pointsSlice = createSlice({
+  name: 'points',
+  initialState: {
+    points: 0,
+  },
+  reducers: {
+    increment: (state) => {
+      state.points += 1
+    },
+    decrement: (state) => {
+      state.points -= 1
+    },
+    incrementByAmount: (state, action) => {
+      state.points += action.points
+    },
+  },
+});
+
+const store = configureStore({
+  reducer: {
+    points: pointsSlice.reducer,
+  },
+});
+
+const { increment, decrement, incrementByAmount } = pointsSlice.actions
 
 function renderAttr(attr) {
   if (attr === undefined) {
@@ -93,6 +121,7 @@ window.showQuestion = () => {
 };
 
 window.showAnswer = (choice) => {
+//  dispatch(increment());
   const data = {
     action: {
       type: 'gotoPage',
@@ -128,6 +157,8 @@ export class Viewer extends React.Component {
   }
 
   render() {
+//    const count = useSelector((state) => state.counter.value)
+    const dispatch = useDispatch()
     const props = this.props;
     const obj = props.obj || {};
     const data = obj.status && [].concat(obj.data.data) || obj.data || {};
@@ -135,14 +166,16 @@ export class Viewer extends React.Component {
     window.gcexports.state = data.state || {}
     const elts = renderElts(page);
     return (
-      <div className="max-w-md flex-1 border-2 m-4 shadow-lg rounded-md bg-white">
-        <link rel="icon" type="image/png" href="/L141/favicon.png" />
-        <link rel="stylesheet" href="/L141/style.css" />
-        <img className="border-4 border-teal-600" src="/L141/logo.svg"></img>
-        <div id="L141-content">
-          {elts}
+      <Provider store={store}>
+        <div className="max-w-md flex-1 border-2 m-4 shadow-lg rounded-md bg-white">
+          <link rel="icon" type="image/png" href="/L141/favicon.png" />
+          <link rel="stylesheet" href="/L141/style.css" />
+          <img className="border-4 border-teal-600" src="/L141/logo.svg"></img>
+          <div id="L141-content">
+            {elts}
+          </div>
         </div>
-      </div>
+      </Provider>
     );
   }
 };
