@@ -265,12 +265,81 @@ const colors = [
 ];
 
 export class Transformer extends BasisTransformer {
-  HELLO(node, options, resume) {
-    this.visit(node.elts[0], options, async (e0, v0) => {
-      const err = [];
-      const val = `hello, ${v0}!`;
-      resume(err, val);
-    });
+  MEMBER_PROFILE(node, options, resume) {
+    const data =
+          options.data
+          || {};
+    const memberName =
+          data.profile
+          && data.profile.memberName
+          || 'Member';
+    const points =
+          data.state
+          && data.state.points
+          || 0;
+    const possiblePoints =
+          data.content
+          && data.content.quiz
+          && data.content.quiz.length
+          || 0;
+    const totalPoints =
+          data.profile
+          && data.profile.totalPoints
+          && data.profile.totalPoints + points
+          || points;
+    const attemptedPoints =
+          data.profile
+          && data.profile.attemptedPoints
+          && data.profile.attemptedPoints + possiblePoints
+          || possiblePoints;
+    const rewardPoints =
+          data.profile
+          && data.profile.rewardPoints
+          || 0;
+    const err = [];
+    const val = {
+      "type": "div",
+      "attr": {
+        "className": "pb-4"
+      },
+      "elts": [{
+        "type": "h3",
+        "attr": {
+          "className": "text-2xl pb-4"
+        },
+        "elts": [
+          memberName,
+        ]
+      }, {
+        "type": "div",
+        "attr": {
+          "className": "p-4 ml-4"
+        },
+        "elts": [{
+          "type": "div",
+          "attr": {},
+          "elts": [`You have take ${attemptedPoints} quizzes. You have gotten ${totalPoints} correct. You have earned ${totalPoints} points.`,
+          ]
+        }]
+      }]
+    };
+    resume(err, val);
+  }
+
+  QUIZ_SCORE(node, options, resume) {
+    const data = options.data || {};
+    const points =
+          data.state
+          && data.state.points
+          || 0;
+    const possiblePoints =
+          data.content
+          && data.content.quiz
+          && data.content.quiz.length
+          || 0;
+    const err = [];
+    const val = `You got ${points} of ${possiblePoints} questions correct.`;
+    resume(err, val);
   }
 
   ENCODE_DATA(node, options, resume) {
@@ -285,7 +354,11 @@ export class Transformer extends BasisTransformer {
   SAMPLE_DATA(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       const err = [].concat(e0);
-      const val = options.data && options.data.quiz || v0;
+      const val =
+            options.data
+            && options.data.content
+            && options.data.content.quiz
+            || v0;
       resume(err, val);
     });
   }
@@ -362,7 +435,6 @@ export class Transformer extends BasisTransformer {
       v0 = [].concat(v0);  // Make sure v0 is an array.
       this.visit(node.elts[1], options, async (e1, v1) => {
         try {
-          // console.log("MULTIPLE_CHOICE() v1=" + JSON.stringify(v1, null, 2));
           const index =
                 options.data
                 && options.data.action
@@ -381,7 +453,6 @@ export class Transformer extends BasisTransformer {
           } else {
             val = this.renderMultipleChoiceQuestion(v0, question);
           }
-          // console.log("MULTIPLE_CHOICE() val=" + JSON.stringify(val, null, 2));
           resume(err, val);
         } catch (x) {
           console.log(x.stack);
@@ -414,7 +485,6 @@ export class Transformer extends BasisTransformer {
 
   MULTIPLE_CHOICE_ANSWER(node, options, resume) {
     try {
-      // console.log("MULTIPLE_CHOICE_ANSWER() options=" + JSON.stringify(options, null, 2));
       this.visit(node.elts[0], options, async (e0, v0) => {
         v0 = [].concat(v0);  // Make sure v0 is an array.
         this.visit(node.elts[1], options, async (e1, v1) => {
@@ -423,10 +493,8 @@ export class Transformer extends BasisTransformer {
                 && options.data.action
                 && options.data.action.choice
                 || { points: -1, message: 'No selection' };
-          // console.log("MULTIPLE_CHOICE_ANSWER() choice=" + JSON.stringify(choice, null, 2));
           const err = [].concat(e0).concat(e1);
           const val = this.renderMultipleChoiceAnswer(v0, choice);
-          // console.log("MULTIPLE_CHOICE_ANSWER() val=" + JSON.stringify(val, null, 2));
           resume(err, val);
         });
       });
@@ -884,7 +952,6 @@ export class Transformer extends BasisTransformer {
   }
   
   PROG(node, options, resume) {
-    // console.log("PROG() options=" + JSON.stringify(options, null, 2));
     if (!options) {
       options = {};
     }
@@ -892,21 +959,26 @@ export class Transformer extends BasisTransformer {
       const err = e0;
       let val = v0.pop();  // Return the value of the last expression.
       let index = 0;
+      let points = 0;
       if (options.data && options.data.action) {
         const action = options.data.action;
+        const state = options.data.state;
         if (action.type === 'gotoPage') {
           val = val.pages[action.pageName];
           index = action.index || index;
+          points = (state && state.points || 0) + (action.choice && action.choice.points || 0);
         }
       } else {
         val = val.pages.start;
       }
-      resume(err, {
+      val = {
         page: val,
         state: {
-          index: index
-        },
-      });
+          index: index,
+          points: points,
+        }
+      };
+      resume(err, val);
     });
   }
 }

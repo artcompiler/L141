@@ -1,5 +1,7 @@
 window.gcexports.globalLexicon = {
   "quiz" : { "tk": 1, "name": "QUIZ", "cls": "function", "length": 0 , "arity": 0 },
+  "member-profile" : { "tk": 1, "name": "MEMBER_PROFILE", "cls": "function", "length": 0 , "arity": 0 },
+  "quiz-score" : { "tk": 1, "name": "QUIZ_SCORE", "cls": "function", "length": 0 , "arity": 0 },
   "multiple-choice" : { "tk": 1, "name": "MULTIPLE_CHOICE", "cls": "function", "length": 2 , "arity": 2 },
   "multiple-choice-answer" : { "tk": 1, "name": "MULTIPLE_CHOICE_ANSWER", "cls": "function", "length": 2 , "arity": 2 },
   "sample-data" : { "tk": 1, "name": "SAMPLE_DATA", "cls": "function", "length": 1 , "arity": 1 },

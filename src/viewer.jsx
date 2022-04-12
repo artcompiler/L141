@@ -83,7 +83,8 @@ window.showQuestion = () => {
       type: 'gotoPage',
       pageName: 'question',
       index: window.gcexports.state.index + 1 || 1,
-    }
+    },
+    state: window.gcexports.state,
   };
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data,
@@ -99,7 +100,8 @@ window.showAnswer = (choice) => {
       pageName: 'answer',
       index: window.gcexports.state.index || 0,
       choice,
-    }
+    },
+    state: window.gcexports.state,
   };
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data,
@@ -115,6 +117,7 @@ window.gotoPage = (pageName) => {
         type: 'gotoPage',
         pageName,
       },
+      state: window.gcexports.state,
     },
     recompileCode: true,
     dontUpdateID: false
