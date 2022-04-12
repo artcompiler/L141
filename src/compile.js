@@ -435,12 +435,15 @@ export class Transformer extends BasisTransformer {
       v0 = [].concat(v0);  // Make sure v0 is an array.
       this.visit(node.elts[1], options, async (e1, v1) => {
         try {
-          const index =
-                options.data
-                && options.data.action
-                && options.data.action.index
-                || 0;
-          const err = [].concat(e0).concat(e1);
+          const
+          index =
+            options.data
+            && options.data.action
+            && options.data.action.index
+            || 0;
+          const
+          err =
+            [].concat(e0).concat(e1);
           const question = v1 instanceof Array && v1[index];
           let val;
           if (question === undefined) {
@@ -952,6 +955,7 @@ export class Transformer extends BasisTransformer {
   }
   
   PROG(node, options, resume) {
+    // console.log("PROG() options=" + JSON.stringify(options, null, 2));
     if (!options) {
       options = {};
     }
