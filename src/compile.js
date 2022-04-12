@@ -955,7 +955,7 @@ export class Transformer extends BasisTransformer {
   }
   
   PROG(node, options, resume) {
-    // console.log("PROG() options=" + JSON.stringify(options, null, 2));
+    console.log("PROG() options=" + JSON.stringify(options, null, 2));
     if (!options) {
       options = {};
     }
