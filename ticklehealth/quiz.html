@@ -7,16 +7,18 @@
     <title>Quiz</title>
     <link rel="stylesheet" href="/css/tailwind.css" />
   </head>
-  <body>
-    <div class="max-w-md flex-1 m-4 rounded-md bg-white items-center">
-      <img class="border-4 border-teal-600" src="/images/TickleHealthLogo.svg">
+  <body class="min-h-screen min-w-fullscreen bg-white font-raleway flex justify-center items-center">
+    <div class="max-w-md flex-1 m-4 rounded-md bg-white justify-center items-center">
+      <div class="flex justify-center">
+        <img class="border-4 border-teal-600" src="/images/TickleHealthLogo.svg" width="300px">
+      </div>
       <div class="p-4">
         <h3 class="text-center text-2xl">Question # of total. Ex: 2/5</h3>
         <p class="text-center py-3">Generated Tickle Question. Example: Which has less fat per gram?</p>
       </div>
       <form class="needs-validation justify-around py-4 overflow-hidden">
           <div class="flex md:my-auto my-auto h-52 focus:ring-transparent px-2">
-            <select class="min-w-full space-y-1" multiple id="basic-select" data-mdb-validation="true" data-mdb-valid-feedback="This value is valid" data-mdb-invalid-feedback="This value is invalid" data-mdb-clear-button="true">
+            <select class="min-w-full space-y-1 focus:ring-transparent" multiple id="basic-select" data-mdb-validation="true" data-mdb-valid-feedback="This value is valid" data-mdb-invalid-feedback="This value is invalid" data-mdb-clear-button="true">
               <option class="hover:shadow-lg py-3 my-2 border border-blue-600 hover:bg-blue-400 rounded-full text-center" value="1">Butter</option>
               <option class="hover:shadow-lg py-3 my-2 border border-blue-600 hover:bg-blue-400 rounded-full text-center" value="2">Margarine</option>
               <option class="hover:shadow-lg py-3 my-2 border border-blue-600 hover:bg-blue-400 rounded-full text-center" value="3">Olive Oil</option>
