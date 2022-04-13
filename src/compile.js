@@ -7,6 +7,7 @@ import {
   Renderer as BasisRenderer,
 } from '@graffiticode/basis';
 import fs from 'fs';
+import https from 'https';
 import postcss from 'postcss';
 import postcssjs from 'postcss-js';
 import tailwindcss from 'tailwindcss';
@@ -318,7 +319,7 @@ export class Transformer extends BasisTransformer {
         "elts": [{
           "type": "div",
           "attr": {},
-          "elts": [`You have take ${attemptedPoints} quizzes. You have gotten ${totalPoints} correct. You have earned ${totalPoints} points.`,
+          "elts": [`You have answered ${attemptedPoints} questions. You have gotten ${totalPoints} correct. You have earned ${totalPoints} points.`,
           ]
         }]
       }]
@@ -955,7 +956,6 @@ export class Transformer extends BasisTransformer {
   }
   
   PROG(node, options, resume) {
-    console.log("PROG() options=" + JSON.stringify(options, null, 2));
     if (!options) {
       options = {};
     }
@@ -971,6 +971,22 @@ export class Transformer extends BasisTransformer {
           val = val.pages[action.pageName];
           index = action.index || index;
           points = (state && state.points || 0) + (action.choice && action.choice.points || 0);
+        } else if (action.type === 'signIn') {
+          const data = {
+            number: action.data.mobile,
+            name: action.data.name,
+          };
+          postAuth("/signIn", data, (err, data) => {
+            val = {
+              page: val.pages.signIn,
+              state: {
+                err: err,
+                ...data,
+              },
+            };
+            resume(err, val);
+          });
+          return;
         }
       } else {
         val = val.pages.start;
@@ -985,6 +1001,46 @@ export class Transformer extends BasisTransformer {
       resume(err, val);
     });
   }
+}
+
+function postAuth(path, data, resume) {
+  const encodedData = JSON.stringify(data);
+  const options = {
+    host: "auth.artcompiler.com",
+    port: "443",
+    path: path,
+    method: "POST",
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': Buffer.byteLength(encodedData),
+    },
+  };
+  const req = https.request(options);
+  req.on("response", (res) => {
+    let data = "";
+    res.on('data', function (chunk) {
+      data += chunk;
+    }).on('end', function () {
+      if (res.statusCode === 401) {
+        resume(res.statusCode, data);
+      } else {
+        try {
+          data = JSON.parse(data);
+          resume(data.error, data);
+        } catch (e) {
+          console.log("[11] ERROR " + data + " statusCode=" + res.statusCode);
+          console.log(e.stack);
+        }
+      }
+    }).on("error", function () {
+      console.log("error() status=" + res.statusCode + " data=" + data);
+    });
+  });
+  req.end(encodedData);
+  req.on('error', function(err) {
+    console.log("[12] ERROR " + err);
+    resume(err);
+  });
 }
 
 const DEBUGGING = process.env.DEBUGGING === 'true';

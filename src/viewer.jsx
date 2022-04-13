@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as d3 from 'd3';
 import './style.css';
 
+let signInJWT;
 function renderAttr(attr) {
   if (attr === undefined) {
     return {};
@@ -76,6 +77,23 @@ function renderElts(data) {
   });
   return elts;
 }
+
+window.signIn = () => {
+  const mobile = d3.select("input#mobile").node().value
+  const data = {
+    action: {
+      type: 'signIn',
+      data: {
+        mobile,
+      },
+    },
+  };
+  window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
+    data,
+    recompileCode: true,
+    dontUpdateID: false
+  }});
+};
 
 window.showQuestion = () => {
   const data = {
