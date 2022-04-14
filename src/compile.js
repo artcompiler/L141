@@ -987,6 +987,22 @@ export class Transformer extends BasisTransformer {
             resume(err, val);
           });
           return;
+        } else if (action.type === 'finishSignIn') {
+          const data = {
+            jwt: action.data.jwt,
+            passcode: action.data.passcode,
+          };
+          postAuth("/finishSignIn", data, (err, data) => {
+            val = {
+              page: val.pages.gettingStarted,
+              state: {
+                err: err,
+                ...data,
+              },
+            };
+            resume(err, val);
+          });
+          return;
         }
       } else {
         val = val.pages.start;

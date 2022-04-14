@@ -79,7 +79,11 @@ function renderElts(data) {
 }
 
 window.signIn = () => {
-  const mobile = d3.select("input#mobile").node().value
+  const mobile =
+        d3.select("input#mobile1").node().value
+        + d3.select("input#mobile2").node().value
+        + d3.select("input#mobile3").node().value
+        + d3.select("input#mobile4").node().value;
   const data = {
     action: {
       type: 'signIn',
@@ -95,14 +99,40 @@ window.signIn = () => {
   }});
 };
 
+window.finishSignIn = () => {
+  const state = window.gcexports.state;
+  const jwt = state.jwt;
+  const passcode =
+        d3.select("input#field1").node().value
+        + d3.select("input#field2").node().value
+        + d3.select("input#field3").node().value
+        + d3.select("input#field4").node().value;
+  const data = {
+    action: {
+      type: 'finishSignIn',
+      data: {
+        jwt,
+        passcode,
+      },
+    },
+  };
+  window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
+    data,
+    recompileCode: true,
+    dontUpdateID: false
+  }});
+};
+
 window.showQuestion = () => {
+  const index = window.gcexports.state.index + 1 || 1;
+  const state = window.gcexports.state;
   const data = {
     action: {
       type: 'gotoPage',
       pageName: 'question',
-      index: window.gcexports.state.index + 1 || 1,
+      index,
     },
-    state: window.gcexports.state,
+    state,
   };
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data,
