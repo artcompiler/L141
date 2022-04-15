@@ -78,6 +78,11 @@ function renderElts(data) {
   return elts;
 }
 
+window.onload = () => {
+};
+
+
+
 window.signIn = () => {
   const mobile =
         d3.select("input#mobile1").node().value
@@ -166,6 +171,21 @@ window.gotoPage = (pageName) => {
         pageName,
       },
       state: window.gcexports.state,
+    },
+    recompileCode: true,
+    dontUpdateID: false
+  }});
+};
+
+window.accessToken = () => {
+  const accessToken = localStorage.getItem("accessToken");
+  const pageName = accessToken && 'welcomeBack' || 'signUp';
+  window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
+    data: {
+      action: {
+        type: 'gotoPage',
+        pageName,
+      },
     },
     recompileCode: true,
     dontUpdateID: false

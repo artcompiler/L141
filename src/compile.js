@@ -564,6 +564,22 @@ export class Transformer extends BasisTransformer {
     });
   }
 
+  ONLOAD(node, options, resume) {
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      v0 = [].concat(v0);  // Make sure v0 is an array.
+      this.visit(node.elts[1], options, async (e1, v1) => {
+        const attrs = {};
+        v0.forEach((v) => {
+          attrs.onLoad = v;
+        });
+        v1.attr = attrsFromVal(attrs, v1.attr);
+        const err = [].concat(e0).concat(e1);
+        const val = v1;
+        resume(err, val);
+      });
+    });
+  }
+
   BORDER(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
       v0 = [].concat(v0);  // Make sure v0 is an array.
@@ -964,11 +980,13 @@ export class Transformer extends BasisTransformer {
       let val = v0.pop();  // Return the value of the last expression.
       let index = 0;
       let points = 0;
+      let page;
       if (options.data && options.data.action) {
         const action = options.data.action;
         const state = options.data.state;
+        console.log("prog() action=" + JSON.stringify(action, null, 2));
         if (action.type === 'gotoPage') {
-          val = val.pages[action.pageName];
+          page = val.pages[action.pageName];
           index = action.index || index;
           points = (state && state.points || 0) + (action.choice && action.choice.points || 0);
         } else if (action.type === 'signIn') {
@@ -1005,10 +1023,12 @@ export class Transformer extends BasisTransformer {
           return;
         }
       } else {
-        val = val.pages.start;
+        page = val.pages.start;
       }
+      console.log("prog() val=" + JSON.stringify(val, null, 2));
+      console.log("prog() page=" + JSON.stringify(page, null, 2));
       val = {
-        page: val,
+        page: page,
         state: {
           index: index,
           points: points,
