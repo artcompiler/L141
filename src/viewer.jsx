@@ -206,10 +206,10 @@ export class Viewer extends React.Component {
     window.gcexports.state = data.state || {}
     const elts = renderElts(page);
     return (
-      <div className="max-w-md flex-1 border-2 m-4 shadow-lg rounded-md bg-white">
+      <div className="max-w-md flex-1 m-4 rounded-none bg-white">
         <link rel="icon" type="image/png" href="/L141/favicon.png" />
         <link rel="stylesheet" href="/L141/style.css" />
-        <img className="border-4 border-teal-600" src="/L141/logo.svg"></img>
+        <img className="" src="/L141/logo.svg"></img>
         <div id="L141-content">
           {elts}
         </div>
