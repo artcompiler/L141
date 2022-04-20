@@ -389,7 +389,7 @@ export class Transformer extends BasisTransformer {
         ]
       };
     };
-    
+
     const choices = [];
     data.choices.forEach((choice) => {
       choices.push(renderChoice(choice));
@@ -506,6 +506,23 @@ export class Transformer extends BasisTransformer {
       console.log(x.stack);
       resume(x.message);
     }
+  }
+
+  USERNAME(node, options, resume) {
+    resume([], "Guest");
+  }
+
+  AUTHENTICATE_USER(node, options, resume) {
+    console.log("authenticate_user() options=" + JSON.stringify(options, null, 2));
+    this.visit(node.elts[0], options, async (e0, v0) => {
+      if (e0 && e0.length) {
+        resume(e0);
+        return;
+      }
+      const val = options.data.jwt && v0[1] || v0[0];
+      console.log("authenticate_user() val=" + JSON.stringify(val, null, 2));
+      resume([], val);
+    });
   }
 
   LABEL(node, options, resume) {
@@ -970,7 +987,7 @@ export class Transformer extends BasisTransformer {
       console.log(`${key} => ${JSON.stringify(this.nodePool[key], null, 2)}`);
     });
   }
-  
+
   PROG(node, options, resume) {
     if (!options) {
       options = {};
@@ -984,16 +1001,20 @@ export class Transformer extends BasisTransformer {
       if (options.data && options.data.action) {
         const action = options.data.action;
         const state = options.data.state;
-        console.log("prog() action=" + JSON.stringify(action, null, 2));
         if (action.type === 'gotoPage') {
           page = val.pages[action.pageName];
           index = action.index || index;
           points = (state && state.points || 0) + (action.choice && action.choice.points || 0);
+        } else if (action.type === 'signUp') {
+          resume(err, {
+            page: val.pages.signUp,
+          });
+          return;
         } else if (action.type === 'signIn') {
-          const data = {
-            number: action.data.mobile,
-            name: action.data.name,
-          };
+          const number = action.data.number;
+          const name = action.data.name;
+          const data = { number, name };
+          console.log("prog() data=" + JSON.stringify(data));
           postAuth("/signIn", data, (err, data) => {
             val = {
               page: val.pages.signIn,
@@ -1002,6 +1023,7 @@ export class Transformer extends BasisTransformer {
                 ...data,
               },
             };
+            console.log("prog() val=" + JSON.stringify(val));
             resume(err, val);
           });
           return;
@@ -1012,12 +1034,13 @@ export class Transformer extends BasisTransformer {
           };
           postAuth("/finishSignIn", data, (err, data) => {
             val = {
-              page: val.pages.gettingStarted,
+              page: val.pages.welcomeBack,
               state: {
                 err: err,
                 ...data,
               },
             };
+            console.log("prog() finishSignIn val=" + JSON.stringify(val, null, 2));
             resume(err, val);
           });
           return;
@@ -1025,10 +1048,8 @@ export class Transformer extends BasisTransformer {
       } else {
         page = val.pages.start;
       }
-      console.log("prog() val=" + JSON.stringify(val, null, 2));
-      console.log("prog() page=" + JSON.stringify(page, null, 2));
       val = {
-        page: page,
+        page,
         state: {
           index: index,
           points: points,

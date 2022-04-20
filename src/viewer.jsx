@@ -78,13 +78,11 @@ function renderElts(data) {
   return elts;
 }
 
-window.onload = () => {
+window.start = () => {
 };
 
-
-
 window.signIn = () => {
-  const mobile =
+  const number =
         d3.select("input#mobile1").node().value
         + d3.select("input#mobile2").node().value
         + d3.select("input#mobile3").node().value
@@ -93,7 +91,7 @@ window.signIn = () => {
     action: {
       type: 'signIn',
       data: {
-        mobile,
+        number,
       },
     },
   };
@@ -177,15 +175,15 @@ window.gotoPage = (pageName) => {
   }});
 };
 
-window.accessToken = () => {
-  const accessToken = localStorage.getItem("accessToken");
-  const pageName = accessToken && 'welcomeBack' || 'signUp';
+window.startTickleHealth = () => {
+  const jwt = localStorage.getItem("jwt");
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data: {
       action: {
         type: 'gotoPage',
-        pageName,
+        pageName: 'welcome',
       },
+      jwt,
     },
     recompileCode: true,
     dontUpdateID: false
