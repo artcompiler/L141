@@ -1059,30 +1059,23 @@ export class Transformer extends BasisTransformer {
     const finish = () => {
       this.visit(node.elts[0], options, (e0, v0) => {
         const err = e0;
-        let val = v0.pop();  // Return the value of the last expression.
-        let index = 0;
-        let points = 0;
-        let page;
+        const val = v0.pop();  // Return the value of the last expression.
         if (options.data && options.data.action) {
-          const data = options.data;
-          const action = data.action;
-          const state = data.state;
+          const action = options.data.action;
           if (action.type === 'gotoPage') {
-            page = val.pages[action.pageName];
-            index = action.index || index;
-            points = (state && state.points || 0) + (action.choice && action.choice.points || 0);
-            val = {
-              page,
-              state: {
-                index: index,
-                points: points,
-              }
-            };
-            resume(err, val);
+            const jwt = options.data.jwt;
+            const state = options.data.state;
+            const page = val.pages[action.pageName];
+            const index = action.index || 0;
+            state.index = index;
+            state.points =
+              (state && state.points || 0)
+              + (action.choice && action.choice.points || 0);
+            resume(err, { jwt, page, state });
           } else if (action.type === 'signUp') {
-            resume(err, {
-              page: val.pages.signUp,
-            });
+            const state = options.data.state;
+            const page = val.pages.signUp;
+            resume(err, { page, state });
             return;
           } else if (action.type === 'signIn') {
             const number = action.data.number;
@@ -1090,26 +1083,26 @@ export class Transformer extends BasisTransformer {
             const data = { number, name };
             postAuth("/signIn", data, (err, data) => {
               const jwt = data.jwt;
-              val = {
-                page: val.pages.signIn,
-                jwt,
-              };
-              resume(err, val);
+              const page = val.pages.signIn;
+              const state = options.data.state;
+              resume(err, { jwt, page, state });
             });
             return;
           } else if (action.type === 'finishSignIn') {
             const jwt = options.data.jwt;
-            val = {
-              page: val.pages.welcome,
-              jwt,
+            const user = {
+              id: options.data.id,
+              number: options.data.number,
             };
-            resume(err, val);
+            const state = Object.assign(options.data.state, { user });
+            const page = val.pages.welcome;
+            resume(err, { jwt, page, state });
           }
         } else {
-          val = {
-            page: val.pages.start,
-          };
-          resume([], val);
+          const jwt = options.jwt;
+          const state = options.data.state;
+          const page = val.pages.start;
+          resume([], { jwt, page, state });
         }
       });
     };
@@ -1125,8 +1118,19 @@ export class Transformer extends BasisTransformer {
           jwt: action.data.jwt,
           passcode: action.data.passcode,
         };
-        postAuth("/finishSignIn", data, (err, data) => {
-          options.data.jwt = data.jwt;  // Update jwt before page rendering.
+        postAuth("/finishSignIn", data, (err, val) => {
+          console.log("/finishSignIn val=" + JSON.stringify(val, null, 2));
+          const jwt = val.jwt;  // Update jwt before page rendering.
+          const id = val.id;
+          const number = val.number;
+          const user = { id, number };
+          const data = {
+            jwt,
+            state: {
+              user,
+            },
+          };
+          options.data = Object.assign(options.data, data);
           finish();
         });
       } else {
