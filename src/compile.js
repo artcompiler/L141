@@ -427,25 +427,15 @@ export class Transformer extends BasisTransformer {
     const self = this;
     const renderChoice = (choice) => {
       return {
-        "type": "div",
-        "attr": {},
+        "type": "option",
+        "attr": {
+          "name": "option1",
+          "className": "hover:shadow-lg py-3 my-2 border border-blue-600 hover:bg-blue-400 rounded-full text-center",
+          "value": JSON.stringify(choice),
+        },
         "elts": [
-          {
-            "type": "input",
-            "attr": {
-              "type": "radio",
-              "name": "quiz1",
-              "onInput": `showAnswer(${JSON.stringify(choice)})`,
-            }
-          },
-          {
-            "type": "label",
-            "attr": {
-              "className": "px-2 "
-            },
-            "elts": choice.answer,
-          }
-        ]
+          choice.answer,
+        ],
       };
     };
 
@@ -456,7 +446,7 @@ export class Transformer extends BasisTransformer {
     const question = {
       "type": "div",
       "attr": {
-        "className": "pb-4"
+        "className": "pb-4",
       },
       "elts": [{
         "type": "h3",
@@ -466,7 +456,18 @@ export class Transformer extends BasisTransformer {
         "elts": [
           data.question,
         ]
-      }, ...choices
+      }, {
+        "type": "select",
+        "attr": {
+          "name": "question",
+          "className": "min-w-full h-96 space-y-1 focus:border-0",
+          "size": choices.length,
+          "onChange": `showAnswer(JSON.parse(e.target.value))`,
+        },
+        "elts": [
+          ...choices,
+        ]
+      }, 
     ]};
     return question;
   }

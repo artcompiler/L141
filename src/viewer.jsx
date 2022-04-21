@@ -21,6 +21,12 @@ function renderElts(data) {
   let key = 1;
   data.forEach(d => {
     switch(d.type) {
+    case 'select':
+      elts.push(<select key={key++} {...renderAttr(d.attr)}>{renderElts(d.elts)}</select>);
+      break;
+    case 'option':
+      elts.push(<option key={key++} {...renderAttr(d.attr)}>{renderElts(d.elts)}</option>);
+      break;
     case 'input':
       elts.push(<input key={key++} {...renderAttr(d.attr)} />);
       break;
