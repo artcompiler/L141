@@ -3,7 +3,6 @@ import * as React from 'react';
 import * as d3 from 'd3';
 import './style.css';
 
-let signInJWT;
 function renderAttr(attr) {
   if (attr === undefined) {
     return {};
@@ -82,6 +81,7 @@ window.start = () => {
 };
 
 window.signIn = () => {
+  const state = window.gcexports.state;
   const number =
         d3.select("input#mobile1").node().value
         + d3.select("input#mobile2").node().value
@@ -94,6 +94,7 @@ window.signIn = () => {
         number,
       },
     },
+    state,
   };
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data,
@@ -104,7 +105,7 @@ window.signIn = () => {
 
 window.finishSignIn = () => {
   const state = window.gcexports.state;
-  const jwt = state.jwt;
+  const jwt = window.gcexports.jwt;
   const passcode =
         d3.select("input#field1").node().value
         + d3.select("input#field2").node().value
@@ -118,6 +119,7 @@ window.finishSignIn = () => {
         passcode,
       },
     },
+    state,
   };
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data,
@@ -145,6 +147,7 @@ window.showQuestion = () => {
 };
 
 window.showAnswer = (choice) => {
+  const state = window.gcexports.state;
   const data = {
     action: {
       type: 'gotoPage',
@@ -152,7 +155,7 @@ window.showAnswer = (choice) => {
       index: window.gcexports.state.index || 0,
       choice,
     },
-    state: window.gcexports.state,
+    state,
   };
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data,
@@ -162,13 +165,16 @@ window.showAnswer = (choice) => {
 };
 
 window.gotoPage = (pageName) => {
+  const state = window.gcexports.state;
+  const jwt = window.gcexports.jwt;
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data: {
+      jwt,
       action: {
         type: 'gotoPage',
         pageName,
       },
-      state: window.gcexports.state,
+      state,
     },
     recompileCode: true,
     dontUpdateID: false
@@ -176,14 +182,16 @@ window.gotoPage = (pageName) => {
 };
 
 window.startTickleHealth = () => {
-  const jwt = localStorage.getItem("jwt");
+  const jwt = window.gcexports.jwt;
+  const state = window.gcexports.state;
   window.gcexports.dispatcher.dispatch({[window.gcexports.id]: {
     data: {
+      jwt,
       action: {
         type: 'gotoPage',
         pageName: 'welcome',
       },
-      jwt,
+      state,
     },
     recompileCode: true,
     dontUpdateID: false
@@ -192,6 +200,7 @@ window.startTickleHealth = () => {
 
 export class Viewer extends React.Component {
   componentDidMount() {
+    window.gcexports.jwt = localStorage.getItem('jwt');
     document.title = "TickleHealth";
     d3.select('#graff-view').append('div').classed('done-rendering', true);
   }
@@ -201,7 +210,17 @@ export class Viewer extends React.Component {
     const obj = props.obj || {};
     const data = obj.status && [].concat(obj.data.data) || obj.data || {};
     const page = data.page || [];
-    window.gcexports.state = data.state || {}
+    const state = data.state || {};
+    const userID = data.id;
+    const number = data.number;
+    const jwt = data.jwt;
+    if (jwt) {
+      window.gcexports.jwt = jwt;
+      localStorage.setItem("jwt", jwt);
+      localStorage.setItem("number", number);
+      localStorage.setItem("userID", userID);
+    }
+    window.gcexports.state = state;
     const elts = renderElts(page);
     return (
       <div className="max-w-md flex-1 m-4 rounded-none bg-white">

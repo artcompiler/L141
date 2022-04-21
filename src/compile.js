@@ -13,6 +13,65 @@ import postcssjs from 'postcss-js';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 
+const validatedUsers = {};
+
+function postAuth(path, data, resume) {
+  const encodedData = JSON.stringify(data);
+  const options = {
+    host: "auth.artcompiler.com",
+    port: "443",
+    path: path,
+    method: "POST",
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': Buffer.byteLength(encodedData),
+    },
+  };
+  const req = https.request(options);
+  req.on("response", (res) => {
+    let data = "";
+    res.on('data', function (chunk) {
+      data += chunk;
+    }).on('end', function () {
+      if (res.statusCode === 401) {
+        resume(res.statusCode, data);
+      } else {
+        try {
+          data = JSON.parse(data);
+          resume(data.error, data);
+        } catch (e) {
+          console.log("[11] ERROR " + data + " statusCode=" + res.statusCode);
+          console.log(e.stack);
+        }
+      }
+    }).on("error", function () {
+      console.log("error() status=" + res.statusCode + " data=" + data);
+    });
+  });
+  req.end(encodedData);
+  req.on('error', function(err) {
+    console.log("[12] ERROR " + err);
+    resume(err);
+  });
+}
+
+function validateUser(jwt, lang, resume) {
+  if (jwt === undefined) {
+    // User has not signed in.
+    resume(401);
+  } else {
+    postAuth("/validateSignIn", { jwt }, (err, data) => {
+      if (err && err.length) {
+        // There is an issue with sign in.
+        resume(err, data);
+      } else {
+        validatedUsers[jwt] = data;
+        resume(err, data);
+      }
+    });
+  }
+}
+
 export class Checker extends BasisChecker {
   HELLO(node, options, resume) {
     this.visit(node.elts[0], options, async (e0, v0) => {
@@ -509,19 +568,27 @@ export class Transformer extends BasisTransformer {
   }
 
   USERNAME(node, options, resume) {
+    console.log("username() options=" + JSON.stringify(options, null, 2));
     resume([], "Guest");
   }
 
   AUTHENTICATE_USER(node, options, resume) {
-    console.log("authenticate_user() options=" + JSON.stringify(options, null, 2));
     this.visit(node.elts[0], options, async (e0, v0) => {
       if (e0 && e0.length) {
         resume(e0);
         return;
       }
-      const val = options.data.jwt && v0[1] || v0[0];
-      console.log("authenticate_user() val=" + JSON.stringify(val, null, 2));
-      resume([], val);
+      let val;
+      const jwt = options.data.jwt;
+      const lang = "L141";
+      validateUser(jwt, lang, (err, data) => {
+        if (err) {
+          val = v0[0];
+        } else {
+          val = v0[1];
+        }
+        resume([], val);
+      });
     });
   }
 
@@ -989,115 +1056,86 @@ export class Transformer extends BasisTransformer {
   }
 
   PROG(node, options, resume) {
+    const finish = () => {
+      this.visit(node.elts[0], options, (e0, v0) => {
+        const err = e0;
+        let val = v0.pop();  // Return the value of the last expression.
+        let index = 0;
+        let points = 0;
+        let page;
+        if (options.data && options.data.action) {
+          const data = options.data;
+          const action = data.action;
+          const state = data.state;
+          if (action.type === 'gotoPage') {
+            page = val.pages[action.pageName];
+            index = action.index || index;
+            points = (state && state.points || 0) + (action.choice && action.choice.points || 0);
+            val = {
+              page,
+              state: {
+                index: index,
+                points: points,
+              }
+            };
+            resume(err, val);
+          } else if (action.type === 'signUp') {
+            resume(err, {
+              page: val.pages.signUp,
+            });
+            return;
+          } else if (action.type === 'signIn') {
+            const number = action.data.number;
+            const name = action.data.name;
+            const data = { number, name };
+            postAuth("/signIn", data, (err, data) => {
+              const jwt = data.jwt;
+              val = {
+                page: val.pages.signIn,
+                jwt,
+              };
+              resume(err, val);
+            });
+            return;
+          } else if (action.type === 'finishSignIn') {
+            const jwt = options.data.jwt;
+            val = {
+              page: val.pages.welcome,
+              jwt,
+            };
+            resume(err, val);
+          }
+        } else {
+          val = {
+            page: val.pages.start,
+          };
+          resume([], val);
+        }
+      });
+    };
     if (!options) {
       options = {};
     }
-    this.visit(node.elts[0], options, (e0, v0) => {
-      const err = e0;
-      let val = v0.pop();  // Return the value of the last expression.
-      let index = 0;
-      let points = 0;
-      let page;
-      if (options.data && options.data.action) {
-        const action = options.data.action;
-        const state = options.data.state;
-        if (action.type === 'gotoPage') {
-          page = val.pages[action.pageName];
-          index = action.index || index;
-          points = (state && state.points || 0) + (action.choice && action.choice.points || 0);
-        } else if (action.type === 'signUp') {
-          resume(err, {
-            page: val.pages.signUp,
-          });
-          return;
-        } else if (action.type === 'signIn') {
-          const number = action.data.number;
-          const name = action.data.name;
-          const data = { number, name };
-          console.log("prog() data=" + JSON.stringify(data));
-          postAuth("/signIn", data, (err, data) => {
-            val = {
-              page: val.pages.signIn,
-              state: {
-                err: err,
-                ...data,
-              },
-            };
-            console.log("prog() val=" + JSON.stringify(val));
-            resume(err, val);
-          });
-          return;
-        } else if (action.type === 'finishSignIn') {
-          const data = {
-            jwt: action.data.jwt,
-            passcode: action.data.passcode,
-          };
-          postAuth("/finishSignIn", data, (err, data) => {
-            val = {
-              page: val.pages.welcomeBack,
-              state: {
-                err: err,
-                ...data,
-              },
-            };
-            console.log("prog() finishSignIn val=" + JSON.stringify(val, null, 2));
-            resume(err, val);
-          });
-          return;
-        }
+    if (options.data && options.data.action) {
+      const data = options.data;
+      const action = data.action;
+      const state = data.state;
+      if (action.type === 'finishSignIn') {
+        const data = {
+          jwt: action.data.jwt,
+          passcode: action.data.passcode,
+        };
+        postAuth("/finishSignIn", data, (err, data) => {
+          options.data.jwt = data.jwt;  // Update jwt before page rendering.
+          finish();
+        });
       } else {
-        page = val.pages.start;
+        finish();
       }
-      val = {
-        page,
-        state: {
-          index: index,
-          points: points,
-        }
-      };
-      resume(err, val);
-    });
+    } else {
+      finish();
+    }
   }
-}
-
-function postAuth(path, data, resume) {
-  const encodedData = JSON.stringify(data);
-  const options = {
-    host: "auth.artcompiler.com",
-    port: "443",
-    path: path,
-    method: "POST",
-    headers: {
-      'Content-Type': 'text/plain',
-      'Content-Length': Buffer.byteLength(encodedData),
-    },
-  };
-  const req = https.request(options);
-  req.on("response", (res) => {
-    let data = "";
-    res.on('data', function (chunk) {
-      data += chunk;
-    }).on('end', function () {
-      if (res.statusCode === 401) {
-        resume(res.statusCode, data);
-      } else {
-        try {
-          data = JSON.parse(data);
-          resume(data.error, data);
-        } catch (e) {
-          console.log("[11] ERROR " + data + " statusCode=" + res.statusCode);
-          console.log(e.stack);
-        }
-      }
-    }).on("error", function () {
-      console.log("error() status=" + res.statusCode + " data=" + data);
-    });
-  });
-  req.end(encodedData);
-  req.on('error', function(err) {
-    console.log("[12] ERROR " + err);
-    resume(err);
-  });
 }
 
 const DEBUGGING = process.env.DEBUGGING === 'true';
@@ -1115,8 +1153,6 @@ export class Renderer extends BasisRenderer {
       errors: [],
     };
     resume(err, val);
-    //   });
-    // });
   }
 }
 
